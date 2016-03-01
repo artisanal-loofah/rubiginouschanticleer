@@ -8,6 +8,8 @@ var Session = require( './sessions/sessions' );
 var User = require( './users/users' );
 
 
+var passport = require('passport');
+var Strategy = require('passport-facebook').Strategy;
 
 //setting up serverside facebook request w/ passport
 var usersController = require('./users/usersController');
@@ -20,7 +22,7 @@ passport.use(new Strategy({
   },
   function(accessToken, refreshToken, profile, cb) {
     //call a function which checks if user is in db
-    usersController.createOrFindOne(profile);
+    usersController.findOrCreate(profile);
     return cb(null, profile);
 }));
 

@@ -6,8 +6,8 @@ var prefsController = require('../prefs/prefsController.js');
 var sessionsController = require('../sessions/sessionsController.js');
 var votesController = require('../votes/votesController.js');
 var sessions_usersController = require('../sessions_users/sessions_usersController.js');
-var passport       = require('passport');
-var Strategy       = require('passport-facebook').Strategy;
+var passport = require('passport');
+var Strategy = require('passport-facebook').Strategy;
 
 var helpers = require('./helpers.js'); // our custom middleware
 
@@ -34,11 +34,11 @@ module.exports = function ( app, express ) {
       res.cookie('name',req.user.displayName);
       res.cookie('fbId',req.user.id);
       res.cookie('picture',req.user.photos[0].value);
-      res.redirect('/#sessions');
+      res.redirect('/#/sessions');
   });
 
   app.get('/login',function(req, res){
-    res.redirect('/#signin');
+    res.redirect('/#/signin');
   });
 
 
