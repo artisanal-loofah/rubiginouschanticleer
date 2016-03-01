@@ -50,6 +50,28 @@ module.exports = function ( app, express ) {
   // This endpoint answers the question, 'For session <id>, do we currently have a match on movie <id>?'
   app.get('/api/sessions/:session_id/match/:movie_id', votesController.checkMatch );
 
+  /*FACEBOOK LOGIN */
+  app.get('/login/facebook', 
+    passport.authenticate('facebook', {scope: ['user_friends']}));
+
+  app.get('/login/facebook/return', 
+    passport.authenticate('facebook', { failureRedirect: '/' }),
+    function(req, res) {
+      //check users events and decide any passed deadline
+      EventController.decideUsersEvents(req.user.id);
+
+      //send cookie so client side has user info
+      res.cookie('name',req.user.displayName);
+      res.cookie('fbId',req.user.id);
+      res.cookie('picture',req.user.photos[0].value);
+      res.redirect('/#sessions');
+  });
+
+  app.get('/login',function(req, res){
+    res.redirect('/#signin');
+  });
+
+
   // If a request is sent somewhere other than the routes above,
   // send it through our custom error handler
   app.use( helpers.errorLogger );
