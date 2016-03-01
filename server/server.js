@@ -7,6 +7,26 @@ var io = require( 'socket.io' )( http );
 var Session = require( './sessions/sessions' );
 var User = require( './users/users' );
 
+
+var passport = require('passport');
+var Strategy = require('passport-facebook').Strategy;
+
+//setting up serverside facebook request w/ passport
+var usersController = require('./users/usersController');
+
+passport.use(new Strategy({
+    clientID: process.env.FACEBOOK_APP_ID,
+    clientSecret: process.env.FACEBOOK_SECRET,
+    callbackURL: process.env.FACEBOOK_URL,
+    profileFields: ['id', 'displayName', 'picture.height(150).width(150)','friends']
+  },
+  function(accessToken, refreshToken, profile, cb) {
+    //call a function which checks if user is in db
+    usersController.findOrCreate(profile);
+    return cb(null, profile);
+}));
+
+
 io.on( 'connect' , function( socket ){
   console.log( 'we are connected!!' );
   socket.on( 'disconnect', function() {
