@@ -4,8 +4,8 @@ var jwt = require( 'jwt-simple' );
 module.exports = {
   getAllUsers: function() {},
 
-  findOrCreate: function (userInfo) {
-    
+  findOrCreate: function (profile) {
+
   },
 
   signin: function (request, response) {
