@@ -63,6 +63,8 @@ module.exports = {
       })
     },
 
-  signout: function() {}
+  signout: function() {
+
+  }
 
 };
