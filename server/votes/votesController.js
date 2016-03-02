@@ -34,9 +34,11 @@ var addVote = function( req, res ) {
   User.findOne({where: {username: req.body.username}})
   .then(function(user){
     var user = user.dataValues.id;
+    console.log('user found: ', user);
     Session.findOne({where: {sessionName: req.body.sessionName}})
     .then(function(session){
       var session = session.dataValues.id;
+      console.log('session found: ', session);
       if( !movie ) { // if movie is not provided
         send400( 'Movie ID not provided' );
         return;
