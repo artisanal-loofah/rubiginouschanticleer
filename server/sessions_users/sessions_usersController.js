@@ -64,21 +64,24 @@ module.exports = {
     var username = req.body.username;
     var sessionName = req.body.sessionName;
 
-    User.findOne( {where: {username : username} } )
-    .then( function( user ) {
-      Session.findOne( {where: { sessionName : sessionName } } )
-      .then( function( session ) {
-        Session_User.findOrCreate( { where: {
+    User.findOne({where: {username : username}})
+    .then(function(user) {
+      return Session.findOne({where: {sessionName : sessionName}});
+    })
+    .then(function(session) {
+      return Session_User.findOrCreate({
+        where: {
           user_id: user.id,
           session_id: session.id
-        } } ).then( function( session_user ) {
-          res.send( session_user );
-        }, function( err ) {
-          helpers.errorHandler( err, req, res, next );
-        });
-      }, function( err ) {
-        helpers.errorHandler( err, req, res, next );
+        }
       });
-   });
+    })
+    .then(function(sessionUser) {
+      res.statusCode = 201;
+      res.json(sessionUser);
+    })
+    .catch(function(err) {
+      helpers.errorHandler(err, req, res, next);
+    });
   }
 };
