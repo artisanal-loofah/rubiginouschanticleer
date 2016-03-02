@@ -3,7 +3,7 @@
 
 describe('AuthController', function () {
   var $scope, $rootScope, $location, $window, $httpBackend, createAuthController, Auth;
-  beforeEach(module('moviematch'));
+  beforeEach(module('dinnerDaddy'));
   beforeEach(inject(function ($injector) {
 
     $rootScope = $injector.get('$rootScope');
@@ -30,7 +30,7 @@ describe('AuthController', function () {
   afterEach(function () {
     $httpBackend.verifyNoOutstandingExpectation();
     $httpBackend.verifyNoOutstandingRequest();
-    $window.localStorage.removeItem('com.moviematch');
+    $window.localStorage.removeItem('com.dinnerDaddy');
   });
 
   it('should have a signup method', function () {
@@ -45,7 +45,7 @@ describe('AuthController', function () {
     $httpBackend.expectPOST('/api/users/signup').respond({token: token});
     $scope.signup();
     $httpBackend.flush();
-    expect($window.localStorage.getItem('com.moviematch')).to.equal(token);
+    expect($window.localStorage.getItem('com.dinnerDaddy')).to.equal(token);
   });
 
   it('should have a signin method', function () {
@@ -58,6 +58,6 @@ describe('AuthController', function () {
     $httpBackend.expectPOST('/api/users/signin').respond({token: token});
     $scope.signin();
     $httpBackend.flush();
-    expect($window.localStorage.getItem('com.moviematch')).to.equal(token);
+    expect($window.localStorage.getItem('com.dinnerDaddy')).to.equal(token);
   });
 });

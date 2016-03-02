@@ -1,4 +1,4 @@
-angular.module( 'moviematch.directive', [] )
+angular.module( 'dinnerDaddy.directive', [] )
 
 .directive ('dstMainNav',  function( ) {
     return {

@@ -1,12 +1,12 @@
 var Sequelize = require( 'sequelize' );
-var db = new Sequelize( 'moviematch', null, null, {
+var db = new Sequelize('dinnerDaddy', null, null, {
   dialect: 'sqlite',
 
   define: {
     underscored: true
   },
 
-  storage: './server/config/moviematch.sqlite'
+  storage: './server/config/dinnerDaddy.sqlite'
 });
 
 module.exports = db;

@@ -1,4 +1,4 @@
-angular.module( 'moviematch.dstValidateUser', [] )
+angular.module( 'dinnerDaddy.dstValidateUser', [] )
 
 .directive ('dstValidateUser',  function($q, $http) {
     return {

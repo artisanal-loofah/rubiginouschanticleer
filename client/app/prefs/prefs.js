@@ -1,3 +1,3 @@
-angular.module( 'moviematch.prefs', [] )
+angular.module( 'dinnerDaddy.prefs', [] )
 
 .controller( 'PrefsController', function( $scope ) {} );

@@ -1,4 +1,4 @@
-angular.module( 'moviematch.lobby', [] )
+angular.module( 'dinnerDaddy.lobby', [] )
 
 .controller( 'LobbyController', function( $scope, Session, Lobby, Socket, $location, Auth ) {
   $scope.session = {};

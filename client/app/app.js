@@ -1,15 +1,15 @@
-var app = angular.module( 'moviematch', [
-  'moviematch.auth',
-  'moviematch.match',
-  'moviematch.prefs',
-  'moviematch.sessions',
-  'moviematch.services',
-  'moviematch.showmatch',
-  'moviematch.lobby',
+var app = angular.module( 'dinnerDaddy', [
+  'dinnerDaddy.auth',
+  'dinnerDaddy.match',
+  'dinnerDaddy.prefs',
+  'dinnerDaddy.sessions',
+  'dinnerDaddy.services',
+  'dinnerDaddy.showmatch',
+  'dinnerDaddy.lobby',
   'ngRoute',
   'btford.socket-io',
-  'moviematch.directive',
-  'moviematch.dstValidateUser'
+  'dinnerDaddy.directive',
+  'dinnerDaddy.dstValidateUser'
   ])
 
 .config( function ( $routeProvider, $httpProvider ) {
@@ -57,7 +57,7 @@ var app = angular.module( 'moviematch', [
 // .factory('AttachTokens', function ($window) {
 //   var attach = {
 //     request: function (object) {
-//       var jwt = $window.localStorage.getItem('com.moviematch');
+//       var jwt = $window.localStorage.getItem('com.dinnerDaddy');
 //       if (jwt) {
 //         object.headers['x-access-token'] = jwt;
 //       }

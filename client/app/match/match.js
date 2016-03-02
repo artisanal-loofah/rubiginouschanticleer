@@ -1,4 +1,4 @@
-angular.module( 'moviematch.match', ['moviematch.services'] )
+angular.module( 'dinnerDaddy.match', ['dinnerDaddy.services'] )
 
 .controller( 'MatchController', function( $scope, Match, Auth, Session, FetchMovies, Socket ) {
   $scope.session = {};
