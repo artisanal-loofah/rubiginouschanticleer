@@ -7,6 +7,7 @@ var app = angular.module( 'dinnerDaddy', [
   'dinnerDaddy.showmatch',
   'dinnerDaddy.lobby',
   'ngRoute',
+  'ngCookies',
   'btford.socket-io',
   'dinnerDaddy.directive',
   'dinnerDaddy.dstValidateUser'
