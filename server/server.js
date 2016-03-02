@@ -18,7 +18,6 @@ var yelpkeys = require('../config/yelpkeys.js');
 app.get('/getRestaurants', function (req, res) {
   api(req.query, function (error, resp, body) {
     body = JSON.parse(body);
-    console.log('the body is ---------> : ', body.businesses);
     res.send(200, body.businesses);
   });
 });

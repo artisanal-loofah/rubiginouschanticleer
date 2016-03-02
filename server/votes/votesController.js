@@ -8,11 +8,13 @@ var User = require( '../users/users' );
 var getAllVotes = function() {};
 
 var addVote = function( req, res ) {
+  console.log('>>>>>>>>>>in the addVote server side function...');
   var addVote = function( session_user, movie, vote ) {
     Vote.addVote( session_user, movie, vote ) // add vote to db
     .then( function( data ) {
       // add vote to database
       // return 201 created
+      console.log('>>>>>>>>vote has been added to the DB');
       matchHandler(); // refactor as necessary
       res.status( 201 );
       res.json( data );
@@ -44,8 +46,10 @@ var addVote = function( req, res ) {
         return;
       } else if( !session_user ) { // if session_user is not provided
         if( user && session ) { // but user and session are...
-         Session_User.getSessionUserBySessionIdAndUserId( session, user ) // try to look up session_user
-         .then( function( sessionUser ) {
+         Session_User.getSessionUserBySessionIdAndUserId(session, user) // try to look up session_user
+         .then(function (sessionUser) {
+            console.log('session and user found: ', session, user);
+            console.log('sessionUser is: ', sessionUser);
             session_user = sessionUser.id;
             if( !session_user ) { // we were not able to look up session_user
               // Could not find the given user in the given session

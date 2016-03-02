@@ -26,6 +26,7 @@ Session_User.belongsTo( User, {foreignKey: 'user_id'} );
 Session_User.belongsTo( Session, {foreignKey: 'session_id'} );
 
 Session_User.getSessionUserBySessionIdAndUserId = function( sessionID, userID ) {
+  console.log('searching in ....getSessionUserBySessionIdAndUserId......');
   return Session_User.findOne({where: {session_id: sessionID, user_id: userID} })
     .catch( function( err ) {
       helpers.errorLogger( err );
