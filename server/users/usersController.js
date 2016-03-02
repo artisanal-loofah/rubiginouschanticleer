@@ -3,13 +3,13 @@ var Friendship = require('../friendships/friendshipController');
 var Promise = require('bluebird');
 
 module.exports = {
-  getAllUsers: function() {
-    
+  
+  getFriends: function (profile) {
+
   },
 
   findOrCreate: function (profile) {
     var friends = profile._json.friends.data;
-    console.log('friends are : ', friends);
 
     User.findOne({where: {fb_id: profile.id}})
       .then(function (user) {
