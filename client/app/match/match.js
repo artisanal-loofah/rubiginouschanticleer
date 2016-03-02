@@ -10,7 +10,7 @@ angular.module( 'dinnerDaddy.match', ['dinnerDaddy.services'] )
   $scope.currRestaurant;
 
   Session.getSession()
-  .then( function( session ) {
+  .then(function (session) {
     $scope.session = session;
   });
 
