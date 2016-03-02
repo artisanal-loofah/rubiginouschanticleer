@@ -1,5 +1,5 @@
 var User = require( './users' );
-var jwt = require( 'jwt-simple' );
+var Friendship = require('./friendships/friendships');
 
 module.exports = {
   getAllUsers: function() {
@@ -17,7 +17,7 @@ module.exports = {
     User.findOne({where: {fb_id: newUser.fb_id}})
     .then(function (user) {
       if (user) {
-        console.error('username already exists')
+        user.friends = 
       } else {
         User.create(newUser)
       }
