@@ -7,18 +7,19 @@ angular.module('dinnerDaddy.sessions', [])
   $scope.sessionName = '';
 
   $scope.fetchSessions = function() {
-    Session.fetchSessions().then(function(sessions) {
+    Session.fetchSessions($scope.username)
+    .then(function(sessions) {
       $scope.sessions = sessions;
     });
-  }
+  };
 
-  // $scope.fetchSessions();
+  // UNCOMMENT THIS WHEN IT WORKS: $scope.fetchSessions();
+
   //this function listens to a event emitted by server.js-'new session' and recieves and appends the new session
   Socket.on('newSession', function(data) {
     $scope.sessions.push(data);
   });
 
-  // TODO: Create functions to make buttons work
   $scope.setSession = Session.setSession;
 
   $scope.createSession = function() {
@@ -74,16 +75,23 @@ angular.module('dinnerDaddy.sessions', [])
       });
     };
 
-    var fetchSessions = function() {
-      return $http.get ('/api/sessions')
-      .then(function(response) {
-        return response.data;
-      }, function(err) {
+    var fetchSessions = function(username) {
+      return $http({
+        method:'GET',
+        url: '/api/sessions',
+        params: {
+          username: username
+        }
+      })
+      .then(function(res) {
+        return res.data;
+      })
+      .catch(function(err) {
         console.error(err);
       }); 
     };
 
-    var joinSession = function(sessionName, username) {
+    var joinSession = function(username, sessionName) {
       return $http({
         method: 'POST',
         url: '/api/sessions/users',
@@ -103,7 +111,8 @@ angular.module('dinnerDaddy.sessions', [])
       return $http.get('/api/sessions/' + sessionName)
       .then(function(res) {
         return res.data;
-      }, function(err) {
+      })
+      .catch(function(err) {
         console.error(err);
       });
     };
