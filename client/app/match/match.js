@@ -16,13 +16,13 @@ angular.module( 'dinnerDaddy.match', ['dinnerDaddy.services'] )
 
   var currRestaurantIndex = 0;
 
-  var fetchNextMovies = function( packageNumber, callback ){
-    FetchMovies.getNext10Movies( packageNumber )
-      .then( function( data ) {
-        $scope.moviePackage = data;
-        callback();
-      })
-  };
+  // var fetchNextMovies = function( packageNumber, callback ){
+  //   FetchMovies.getNext10Movies( packageNumber )
+  //     .then( function( data ) {
+  //       $scope.moviePackage = data;
+  //       callback();
+  //     })
+  // };
 
   var fetchRestaurants = function (location) {
     Restaurant.getRestaurants(location)
@@ -41,9 +41,9 @@ angular.module( 'dinnerDaddy.match', ['dinnerDaddy.services'] )
 
   $scope.init = function() {        //as soon as the view is loaded request the first movie-package here
     fetchRestaurants('San Francisco');
-    fetchNextMovies( 0, function() {
-      $scope.currMovie = $scope.moviePackage[0];
-    });
+    // fetchNextMovies( 0, function() {
+    //   $scope.currMovie = $scope.moviePackage[0];
+    // });
   };
 
   $scope.init();
@@ -70,7 +70,8 @@ angular.module( 'dinnerDaddy.match', ['dinnerDaddy.services'] )
     });
   }
   $scope.no = function() {
-    Match.sendVote( $scope.session.sessionName, $scope.user.name, $scope.currMovie.id, false );
+    Match.sendVote( $scope.session.sessionName, $scope.user.name, 2, false );
+    console.log('the scope contains: ', $scope);
     loadNextRestaurant();
   }
 } );
