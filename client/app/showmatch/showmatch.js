@@ -1,4 +1,4 @@
-angular.module( 'moviematch.showmatch', [] )
+angular.module( 'dinnerDaddy.showmatch', [] )
 
 .controller( 'ShowmatchController', function( $scope, FetchMovies, Session, Auth, $routeParams ) {
 

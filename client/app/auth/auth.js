@@ -1,4 +1,4 @@
-angular.module( 'moviematch.auth', [] )
+angular.module( 'dinnerDaddy.auth', [] )
 
 .controller( 'AuthController', function($scope, Auth, $window, $location, $timeout) {
   $scope.user = {};

@@ -1,4 +1,4 @@
-angular.module( 'moviematch.sessions', [] )
+angular.module( 'dinnerDaddy.sessions', [] )
 
 .controller( 'SessionsController', function( $scope, Session, Auth, Socket ) {
   // TODO: these two will need to be removed and created in a different controller

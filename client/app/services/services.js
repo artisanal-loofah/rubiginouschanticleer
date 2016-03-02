@@ -1,4 +1,4 @@
-angular.module( 'moviematch.services', [] )
+angular.module( 'dinnerDaddy.services', [] )
 
 .factory( 'Session', function( $http, $window, $location ) {
   return {
