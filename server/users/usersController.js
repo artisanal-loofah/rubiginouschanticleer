@@ -33,7 +33,7 @@ module.exports = {
       })
       .catch(function (error) {
         console.error(error);
-      })
+      });
   },
 
   signout: function() {
