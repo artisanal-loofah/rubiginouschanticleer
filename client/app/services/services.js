@@ -1,43 +1,5 @@
 angular.module( 'moviematch.services', [] )
 
-.factory( 'Auth', function( $http, $location, $window ) {
-  var username = '';
-  return {
-    signin : function( user ) {
-      return $http.post( '/api/users/signin', user )
-      .then(function ( resp ) {
-        return resp.data.token;
-      });
-    },
-
-    signup : function( user ) {
-      return $http.post( '/api/users/signup', user )
-      .then(function( resp ) {
-        return resp.data.token;
-      })
-      .catch(function( err ) {
-        console.log(err);
-      });
-    },
-
-    isAuth : function() {
-      return !!$window.localStorage.getItem( 'com.moviematch' );
-    },
-
-    signout : function() {
-      $window.localStorage.removeItem( 'com.moviematch' );
-    }, 
-
-    setUserName : function( user ) {
-      $window.localStorage.setItem( 'username', user.username );
-    },
-
-    getUserName : function () {
-      return $window.localStorage.getItem( 'username' );
-    }
-  } 
-} )
-
 .factory( 'Session', function( $http, $window, $location ) {
   return {
     createSession: function( sessionName, callback ) {
@@ -122,46 +84,6 @@ angular.module( 'moviematch.services', [] )
       }, function( err ) {
         console.error( err );
       });
-    }
-
-  }
-} )
-
-.factory( 'Lobby', function( $http ) {
-  return {
-    getUsersInOneSession: function( sessionName ) {
-      return $http.get( '/api/sessions/users/' + sessionName )
-      .then( function( res ) {
-        return res.data;
-      } , 
-      function( err ) {
-        console.error( err );
-      } );
-    }
-  }
-})
-
-.factory( 'FetchMovies', function( $http ) {
-  return {
-
-    getMovie: function( id ) {
-      return $http.get( '/api/movies/' + id )
-      .then( function( res ) {
-        return res.data;
-      },
-      function( err ) {
-        console.error( err );
-      });
-    },
-
-    getNext10Movies: function( packageNumber ) {
-      return $http.get( '/api/movies/package/' + packageNumber )
-      .then( function( res ) {
-        return res.data;
-      },
-      function( err ) {
-        console.error( err );
-      } );
     }
 
   }
