@@ -38,7 +38,7 @@ var app = angular.module( 'dinnerDaddy', [
       controller: 'SessionsController',
       authenticate: true
     })
-    .when( '/restuarants', {
+    .when( '/restaurants', {
       templateUrl: 'app/restaurants/restaurants.html',
       controller: 'RestaurantsController',
     })

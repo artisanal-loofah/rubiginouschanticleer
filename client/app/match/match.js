@@ -1,11 +1,12 @@
 angular.module( 'dinnerDaddy.match', ['dinnerDaddy.services'] )
 
-.controller( 'MatchController', function( $scope, Match, Auth, Session, FetchMovies, Socket, Restaurant ) {
+.controller( 'MatchController', function( $scope, Match, Auth, Session, Socket, Restaurant, $cookies) {
   $scope.session = {};
   $scope.user = {};
   $scope.imgPath = 'http://image.tmdb.org/t/p/w500';
 
-  $scope.user.name = Auth.getUserName();
+  $scope.user.name = $cookies.get('name');
+
   $scope.restaurants;
   $scope.currRestaurant;
   $scope.currRestaurantImageHD;
