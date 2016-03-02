@@ -7,7 +7,7 @@ var User = db.define( 'users', {
   picUrl: Sequelize.STRING
 });
 
-User.sync().then( function() {
+User.sync().then(function() {
   console.log( "users table created");
 })
 .catch( function( err ) {

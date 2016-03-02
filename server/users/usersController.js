@@ -8,7 +8,6 @@ module.exports = {
 
   findOrCreate: function (profile) {
     //var friendswithapp = profile._json.friends.data;
- 
     var newUser = {
       fb_id: profile.id,
       username: profile.displayName,
