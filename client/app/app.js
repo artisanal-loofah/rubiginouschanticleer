@@ -6,6 +6,7 @@ var app = angular.module( 'dinnerDaddy', [
   'dinnerDaddy.services',
   'dinnerDaddy.showmatch',
   'dinnerDaddy.lobby',
+  'moviematch.restaurants',
   'ngRoute',
   'ngCookies',
   'btford.socket-io',
@@ -36,6 +37,10 @@ var app = angular.module( 'dinnerDaddy', [
       templateUrl: 'app/sessions/joinsessions.html',
       controller: 'SessionsController',
       authenticate: true
+    })
+    .when( '/restuarants', {
+      templateUrl: 'app/restaurants/restaurants.html',
+      controller: 'RestaurantsController',
     })
     .when( '/lobby', {
       templateUrl: 'app/lobby/lobby.html',

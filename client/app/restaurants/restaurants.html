@@ -1,0 +1,23 @@
+<h2>Search your city for some poppin bars!</h2>
+<div ng-controller = 'RestaurantsController'>
+
+<form>
+  <input id="inputField" ng-model='location' type='text' placeholder='Enter a city here!' required>
+  <button type="submit" ng-click= "listRestaurants(location)" class="btn btn-warning">Get Bars from {{location}}</button>
+</form>
+
+  <div class ='favouriteDisplay bg-danger'>{{displayBar}}</div>
+      <div class = container id ='scrollBox'>
+
+      <!-- <ul ng-model = 'bars'> -->
+        <div class ='item searchItem' style="cursor: pointer;" ng-click='faveBar(bar)' ng-repeat="restaurant in restaurants"><img src="{{ restaurant.image_url }}">{{restaurant.name}}
+          <div class ='searchData'>
+            <img ng-src = '{{restaurant.rating_img_url}}'/></br>
+              {{restaurant.review_count}} people currently love this place!</br>
+                <b>The one-liner:</b>{{restaurant.snippet_text}}</br>
+                <a target='_blank' ng-href='{{restaurant.url}}'>Click to read more...</a>
+         </div>
+      </div>
+
+  </div>
+</div>

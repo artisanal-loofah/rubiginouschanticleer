@@ -1,19 +1,20 @@
 angular.module( 'dinnerDaddy.match', ['dinnerDaddy.services'] )
 
-.controller( 'MatchController', function( $scope, Match, Auth, Session, FetchMovies, Socket ) {
+.controller( 'MatchController', function( $scope, Match, Auth, Session, FetchMovies, Socket, Restaurant ) {
   $scope.session = {};
   $scope.user = {};
   $scope.imgPath = 'http://image.tmdb.org/t/p/w500';
 
   $scope.user.name = Auth.getUserName();
+  $scope.restaurants;
+  $scope.currRestaurant;
 
   Session.getSession()
   .then( function( session ) {
     $scope.session = session;
   });
 
-  var currMovieIndex = 0;
-  var currMoviePackage = 0;
+  var currRestaurantIndex = 0;
 
   var fetchNextMovies = function( packageNumber, callback ){
     FetchMovies.getNext10Movies( packageNumber )
@@ -23,22 +24,23 @@ angular.module( 'dinnerDaddy.match', ['dinnerDaddy.services'] )
       })
   };
 
-  var loadNextMovie = function(){
-    if( currMovieIndex === 9 ) {
-      currMoviePackage++;
-      fetchNextMovies( currMoviePackage, function() {
-        $scope.currMovie = $scope.moviePackage[0];
-        });
-      currMovieIndex = 0;
-    }
-    else {
-      currMovieIndex++;
-      $scope.currMovie = $scope.moviePackage[currMovieIndex];
-    }
+  var fetchRestaurants = function (location) {
+    Restaurant.getRestaurants(location)
+      .then(function (data) {
+        $scope.restaurants = data;
+        $scope.currRestaurant = $scope.restaurants[currRestaurantIndex];
+        console.log('fetched ok: ', $scope.restaurants);
+      });
+  };
 
+  var loadNextRestaurant = function(){
+      currRestaurantIndex++;
+      $scope.currRestaurant = $scope.restaurants[currRestaurantIndex];
+      console.log('current rest: ', $scope.currRestaurant);
   };
 
   $scope.init = function() {        //as soon as the view is loaded request the first movie-package here
+    fetchRestaurants('San Francisco');
     fetchNextMovies( 0, function() {
       $scope.currMovie = $scope.moviePackage[0];
     });
@@ -62,13 +64,13 @@ angular.module( 'dinnerDaddy.match', ['dinnerDaddy.services'] )
         if( result ) {
           Socket.emit( 'foundMatch', { sessionName: $scope.session.sessionName, movie: $scope.currMovie } );
         } else {
-          loadNextMovie(); 
+          loadNextRestaurant(); 
         }
       });
     });
   }
   $scope.no = function() {
     Match.sendVote( $scope.session.sessionName, $scope.user.name, $scope.currMovie.id, false );
-    loadNextMovie();
+    loadNextRestaurant();
   }
 } );
