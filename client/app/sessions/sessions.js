@@ -1,10 +1,7 @@
 angular.module('dinnerDaddy.sessions', [])
 
 .controller('SessionsController', function ($scope, $cookies, Session, Auth, Socket) {
-  // TODO: these two will need to be removed and created in a different controller
-  // $scope.username = '';
-  // $scope.username = Auth.getUserName();
-  // TODO: this will need to be pulled from the api
+  $scope.username = $cookies.get('name');
   $scope.sessions = [];
 
   $scope.sessionName = '';
@@ -23,23 +20,40 @@ angular.module('dinnerDaddy.sessions', [])
 
   // TODO: Create functions to make buttons work
   $scope.setSession = Session.setSession;
+
   $scope.createSession = function() {
-    Session.createSession($scope.sessionName, $scope.emitCreate);
-    $scope.joinSession($scope.sessionName);
-  };
-  $scope.joinSession = function(sessionName) { // sessionName is from a given session in the view, or from creation
-    Session.setSession(sessionName);
-    Session.joinSession(sessionName, $scope.username, $scope.emitJoin);
+    Session.createSession($scope.sessionName)
+    .then(function() {
+      console.log('created session');
+      Socket.emit('session', {sessionName: $scope.sessionName});
+      $scope.joinSession($scope.sessionName);
+    })
+    .catch(function(error) {
+      console.error(error);
+    });
   };
 
-  $scope.emitCreate = function(sessionName) {
-    //this function emits a create event to the socket.
-    Socket.emit('session', {sessionName : sessionName});
-  };
-  $scope.emitJoin = function(username, sessionName) {
+  var emitJoin = function(username, sessionName) {
     //this function emits a new join event to the socket.
-    Socket.emit('newJoin', {username: username, sessionName: sessionName});
+    Socket.emit('newJoin', {
+      username: username,
+      sessionName: sessionName
+    });
+    $location.path('/lobby');
   };
+
+  // sessionName is from a given session in the view, or from creation
+  $scope.joinSession = function(sessionName) {
+    Session.setSession(sessionName);
+    Session.joinSession($scope.username, sessionName)
+    .then(function() {
+      emitJoin($scope.username, sessionName);
+    })
+    .catch(function(err) {
+      console.error(err);
+    });
+  };
+
 
   $scope.getFriends = function (user) {
     console.log($cookies)
@@ -50,13 +64,13 @@ angular.module('dinnerDaddy.sessions', [])
 
 .factory('Session', function($http, $window, $location) {
 
-    var createSession = function(sessionName, callback) {
-      return $http.post('/api/sessions', { sessionName: sessionName })
-      .then(function(response) {
-        callback(sessionName); // used for emitting session data
-        return response;
-      }, function(err) {
-        console.error(err);
+    var createSession = function(sessionName) {
+      return $http({
+        method: 'POST',
+        url: '/api/sessions',
+        data: {
+          sessionName: sessionName
+        }
       });
     };
 
@@ -69,14 +83,14 @@ angular.module('dinnerDaddy.sessions', [])
       }); 
     };
 
-    var joinSession = function(sessionName, username, callback) {
-      return $http.post('/api/sessions/users', { sessionName: sessionName, username: username })
-      .then(function(response) {
-        callback(username, sessionName); // used for emitting session data
-        $location.path('/lobby');
-        return response;
-      }, function(err) {
-        console.error(err);
+    var joinSession = function(sessionName, username) {
+      return $http({
+        method: 'POST',
+        url: '/api/sessions/users',
+        data: {
+          sessionName: sessionName,
+          username: username
+        }
       });
     };
 
@@ -87,8 +101,8 @@ angular.module('dinnerDaddy.sessions', [])
     var getSession = function() {
       var sessionName = $window.localStorage.getItem('sessionName');
       return $http.get('/api/sessions/' + sessionName)
-      .then(function(session) {
-        return session.data;
+      .then(function(res) {
+        return res.data;
       }, function(err) {
         console.error(err);
       });
