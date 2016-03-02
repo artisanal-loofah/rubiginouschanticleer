@@ -1,30 +1,39 @@
 var User = require( './users' );
-var jwt = require( 'jwt-simple' );
+var Friendship = require('../friendships/friendshipController');
+var Promise = require('bluebird');
 
 module.exports = {
-  getAllUsers: function() {
-    
+  
+  getFriends: function (profile) {
+
   },
 
   findOrCreate: function (profile) {
-    //var friendswithapp = profile._json.friends.data;
-    var newUser = {
-      fb_id: profile.id,
-      username: profile.displayName,
-      picUrl: profile._json.picture.data.url
-    };
+    var friends = profile._json.friends.data;
 
-    User.findOne({where: {fb_id: newUser.fb_id}})
-    .then(function (user) {
-      if (user) {
-        console.error('username already exists')
-      } else {
-        User.create(newUser)
-      }
-    }).catch(function (error) {
-      console.error(error);
-    })
-
+    User.findOne({where: {fb_id: profile.id}})
+      .then(function (user) {
+        if (user) {
+          return user;
+        } else {
+          User.create({
+            fb_id: profile.id,
+            username: profile.displayName,
+            picUrl: profile._json.picture.data.url
+          })
+          .then(function (user) {
+            return user;
+          })
+        }
+      })
+      .then(function (user) {
+        return Promise.all(friends.map(function (friend) {
+          return Friendship.friendsFindOrCreate(user.dataValues.id, friend.id);
+        }));
+      })
+      .catch(function (error) {
+        console.error(error);
+      });
   },
 
   signout: function() {

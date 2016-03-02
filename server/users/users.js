@@ -1,5 +1,5 @@
 var db = require( '../config/db');
-var Sequelize = require( 'sequelize' );
+var Sequelize = require('sequelize' );
 
 var User = db.define( 'users', {
   fb_id: Sequelize.STRING,
