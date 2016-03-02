@@ -1,6 +1,6 @@
 var db = require( '../config/db');
 var Sequelize = require( 'sequelize' );
-var User = require('./users');
+var User = require('../users/users');
 
 var Friendship = db.define('friendships', {
   user_id: Sequelize.INTEGER,

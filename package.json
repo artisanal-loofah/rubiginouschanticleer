@@ -44,6 +44,7 @@
   "homepage": "https://github.com/rubiginouschanticleer/rubiginouschanticleer#readme",
   "dependencies": {
     "angular-mocks": "^1.5.0",
+    "bluebird": "^3.3.3",
     "body-parser": "^1.15.0",
     "bower": "^1.7.7",
     "chai": "^3.5.0",
@@ -52,9 +53,9 @@
     "jwt-simple": "^0.4.1",
     "mocha": "^2.4.5",
     "morgan": "^1.6.1",
-    "phantomjs-prebuilt": "^2.1.4",
     "passport": "^0.3.2",
     "passport-facebook": "^2.1.0",
+    "phantomjs-prebuilt": "^2.1.4",
     "requirejs": "^2.1.22",
     "sequelize": "^3.19.3",
     "socket.io": "^1.4.5",
