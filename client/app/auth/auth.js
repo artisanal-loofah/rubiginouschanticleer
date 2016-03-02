@@ -1,12 +1,9 @@
 angular.module( 'moviematch.auth', [] )
 
-.controller( 'AuthController', function( $scope, Auth, $window, $location, $timeout ) {
+.controller( 'AuthController', function($scope, Auth, $window, $location, $timeout) {
   $scope.user = {};
-  $scope.error = {}
-  $scope.error.userInput = "Please enter a username.";
-  $scope.error.pwdInput = "Please enter a password.";
 
-  if( $location.path() === '/signout' ) {
+  if ($location.path() === '/signout') {
     console.log( 'You are signed out. Redirecting in 2s.' );
     Auth.signout();
     $timeout( function() {
@@ -15,34 +12,28 @@ angular.module( 'moviematch.auth', [] )
   }
 
 
-  $scope.signin = function () {
-    Auth.signin( $scope.user )
-      .then( function ( token ) {
-        $scope.setUserName();
-        $window.localStorage.setItem( 'com.moviematch', token );
-        $location.path( '/sessions' );
-      } )
-      .catch( function ( error ) {
-        $scope.error.signinError = "There was an error logging in. Please double check your username and password.";
-        console.error( error );
-      } );
+  $scope.signout = function () {
+    Auth.signout()
+    .then(function() {
+      // TODO: redirect
+    })
+    .catch(function(err) {
+      console.error(err);
+    });
   };
 
-  $scope.signup = function () {
-    Auth.signup( $scope.user )
-      .then( function ( token ) {
-        $scope.setUserName();
-        $window.localStorage.setItem( 'com.moviematch', token );
-        $location.path( '/sessions' );
-      })
-      .catch( function ( error ) {
-        $scope.error.signupError = "There was an error signing up. It's possible that username already exists.";
-        console.error( error );
-      });
+})
+
+.factory( 'Auth', function($http, $location, $window) {
+  var isAuth = function() {
+    // TODO: check for user cookies
   };
 
-  $scope.setUserName = function () {
-    Auth.setUserName( $scope.user );
+  var signout = function() {
+    // TODO: remove cookies
   };
-
-} );
+  return {
+    isAuth: isAuth,
+    signout: signout
+  };
+});

@@ -22,7 +22,8 @@ module.exports = function ( app, express ) {
 
   /*FACEBOOK LOGIN */
   app.get('/login/facebook', 
-    passport.authenticate('facebook', {scope: ['user_friends']}));
+    passport.authenticate('facebook', {scope: ['user_friends']})
+  );
 
   app.get('/login/facebook/return', 
     passport.authenticate('facebook', { failureRedirect: '/' }),
