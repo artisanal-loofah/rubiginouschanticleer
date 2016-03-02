@@ -1,16 +1,17 @@
-var db = require( '../config/db' );
+var db = require( '../config/db');
 var Sequelize = require( 'sequelize' );
 
 var User = db.define( 'users', {
-	username : Sequelize.STRING,
-	password : Sequelize.STRING
-} );
+  fb_id: Sequelize.STRING,
+  username: Sequelize.STRING,
+  picUrl: Sequelize.STRING
+});
 
 User.sync().then( function() {
-  console.log( "users table created" );
-} )
+  console.log( "users table created");
+})
 .catch( function( err ) {
-  console.error( err );
-} );
+  console.error( err);
+});
 
 module.exports = User;

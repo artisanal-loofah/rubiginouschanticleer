@@ -23,7 +23,7 @@ passport.use(new Strategy({
   },
   function(accessToken, refreshToken, profile, cb) {
     //call a function which checks if user is in db
-    usersController.findOrCreate(profile);
+    usersController.findOrCreate(profile, cb);
     return cb(null, profile);
 }));
 
