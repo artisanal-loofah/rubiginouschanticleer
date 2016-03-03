@@ -71,9 +71,10 @@ module.exports = function ( app, express ) {
   app.post('/api/votes', votesController.addVote );
 
   /* SESSIONS_USERS */
-  app.get('/api/sessions/:sessionId/users', sessionsController.getAllUsers);
+  app.use('/api/sessions/users', helpers.decode);
+  app.get('/api/sessions/users', sessionsController.getAllUsers);
   // app.get('/api/sessions/:session_id/:user_id', sessionsController.getOneUser);
-  app.post('/api/sessions/:sessionId/users', sessionsController.addUser);
+  app.post('/api/sessions/users', sessionsController.addUser);
 
   /* MATCHING */
   // This endpoint answers the question, 'For session <id>, do we currently have a match on movie <id>?'
