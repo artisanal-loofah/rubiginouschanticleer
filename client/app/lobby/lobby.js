@@ -19,7 +19,6 @@ angular.module( 'dinnerDaddy.lobby', [] )
   // });
 
 
-
   //this function is listening to any newUser event and recieves/appends the new user
   Socket.on( 'newUser', function( data ) {
     $scope.users.push( data );
