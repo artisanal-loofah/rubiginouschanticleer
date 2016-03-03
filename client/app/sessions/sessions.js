@@ -1,6 +1,16 @@
 angular.module('dinnerDaddy.sessions', [])
 
 .controller('SessionsController', function ($scope, $rootScope, $cookies, $window, $location, Session, Auth, Socket) {
+  var fetchSessions = function() {
+    Session.fetchSessions()
+    .then(function(sessions) {
+      $scope.sessions = sessions;
+    })
+    .catch(function(err) {
+      console.error(err);
+    });
+  };
+  
   // $scope.username = $cookies.get('name');
   $rootScope.currentSession;
   $rootScope.user;
@@ -12,21 +22,12 @@ angular.module('dinnerDaddy.sessions', [])
   .then(function(data) {
     $rootScope.user = data.user;
     $window.localStorage.setItem('com.dinnerDaddy', data.token);
-    $scope.fetchSessions();
+    fetchSessions();
   })
   .catch(function(err) {
     console.error(err);
   });
 
-  $scope.fetchSessions = function() {
-    Session.fetchSessions()
-    .then(function(sessions) {
-      $scope.sessions = sessions;
-    })
-    .catch(function(err) {
-      console.error(err);
-    });
-  };
 
 
   Socket.on('newSession', function(data) {
