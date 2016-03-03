@@ -67,8 +67,9 @@ io.on( 'connect' , function( socket ){
 
   //this recieves the create event emitted in client/sessions/sessions.js-emitCreate
   socket.on('session', function(data) {
-    Session.findOne({ where: { sessionName: data.sessionName } })
+    Session.findOne({ where: { id: data.sessionID } })
     .then(function(session) {
+      console.log('this is session.datavalue going to send back to client' ,session.dataValues);
       //this function emits an event named newSession and sends the newly created session
       io.emit('newSession', session.dataValues);
     });
