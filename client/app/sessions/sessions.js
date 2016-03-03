@@ -50,11 +50,11 @@ angular.module('dinnerDaddy.sessions', [])
     });
   };
 
-  var emitJoin = function(username, sessionName) {
+  var emitJoin = function(userID, sessionID) {
     //this function emits a new join event to the socket.
     Socket.emit('newJoin', {
-      username: username,
-      sessionName: sessionName
+      userID: userID,
+      sessionID: sessionID
     });
     $location.path('/lobby');
   };
