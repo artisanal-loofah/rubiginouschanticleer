@@ -1,6 +1,16 @@
 angular.module('dinnerDaddy.sessions', [])
 
 .controller('SessionsController', function ($scope, $rootScope, $cookies, $window, $location, Session, Auth, Socket) {
+  var fetchSessions = function() {
+    Session.fetchSessions()
+    .then(function(sessions) {
+      $scope.sessions = sessions;
+    })
+    .catch(function(err) {
+      console.error(err);
+    });
+  };
+  
   // $scope.username = $cookies.get('name');
   $rootScope.currentSession;
   $rootScope.user;
@@ -12,28 +22,17 @@ angular.module('dinnerDaddy.sessions', [])
   .then(function(data) {
     $rootScope.user = data.user;
     $window.localStorage.setItem('com.dinnerDaddy', data.token);
+    fetchSessions();
   })
   .catch(function(err) {
     console.error(err);
   });
 
-  $scope.fetchSessions = function() {
-    Session.fetchSessions()
-    .then(function(sessions) {
-      $scope.sessions = sessions;
-    })
-    .catch(function(err) {
-      console.error(err);
-    });
-  };
 
-  // UNCOMMENT THIS WHEN IT WORKS: $scope.fetchSessions();
 
-  //this function listens to a event emitted by server.js-'new session' and recieves and appends the new session
-  // COMMENTING THIS OUT FOR NOW AND ADDING in $scope.createSession
-  // Socket.on('newSession', function(data) {
-  //   $scope.sessions.push(data);
-  // });
+  Socket.on('newSession', function(data) {
+    $scope.sessions.push(data);
+  });
 
   $scope.setSession = Session.setSession;
 
@@ -42,7 +41,7 @@ angular.module('dinnerDaddy.sessions', [])
     .then(function(session) {
       console.log('created session');
       $rootScope.currentSession = session;
-      Socket.emit('session', {sessionName: session.sessionName});
+      Socket.emit('session', {sessionId: session.id});
       $scope.sessions.push(session);
       $scope.joinSession($scope.sessions.length - 1);
     })
@@ -51,11 +50,11 @@ angular.module('dinnerDaddy.sessions', [])
     });
   };
 
-  var emitJoin = function(username, sessionName) {
+  var emitJoin = function(userId, sessionId) {
     //this function emits a new join event to the socket.
     Socket.emit('newJoin', {
-      username: username,
-      sessionName: sessionName
+      userId: userId,
+      sessionId: sessionId
     });
     $location.path('/lobby');
   };
@@ -64,10 +63,10 @@ angular.module('dinnerDaddy.sessions', [])
   $scope.joinSession = function(index) {
     var session = $scope.sessions[index];
     $rootScope.currentSession = session;
-    Session.setSession(session.sessionName);
+    Session.setSession(session.id);
     Session.joinSession(session.id)
-    .then(function() {
-      emitJoin($rootScope.user.username, session.sessionName);
+    .then(function(user) {
+      emitJoin(user.id, $rootScope.currentSession.id);
     })
     .catch(function(err) {
       console.error(err);
@@ -91,12 +90,11 @@ angular.module('dinnerDaddy.sessions', [])
         data: {
           sessionName: sessionName,
           sessionLocation: sessionLocation
-
         }
       })
       .then(function(res) {
         return res.data;
-      })
+      });
     };
 
     var fetchSessions = function() {
@@ -113,11 +111,14 @@ angular.module('dinnerDaddy.sessions', [])
       return $http({
         method: 'POST',
         url: '/api/sessions/' + sessionId + '/users'
+      })
+      .then(function(res) {
+        return res.data;
       });
     };
 
-    var setSession = function(sessionName) {
-      $window.localStorage.setItem('sessionName', sessionName);
+    var setSession = function(sessionId) {
+      $window.localStorage.setItem('sessionId', sessionId);
     }; 
     // change getSession call in lobby.js and match.js to pass in session
     // OR just access session from rootScope if possible
@@ -143,5 +144,5 @@ angular.module('dinnerDaddy.sessions', [])
       setSession: setSession,
       getSession: getSession,
       getFriends: getFriends
-    }
+    };
 })
