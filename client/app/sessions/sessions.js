@@ -1,104 +1,92 @@
 angular.module('dinnerDaddy.sessions', [])
 
 .controller('SessionsController', function ($scope, $cookies, Session, Auth, Socket) {
-  $scope.username = $cookies.get('name');
+  // TODO: these two will need to be removed and created in a different controller
+  // $scope.username = '';
+  // $scope.username = Auth.getUserName();
+  // TODO: this will need to be pulled from the api
   $scope.sessions = [];
 
   $scope.sessionName = '';
 
   $scope.fetchSessions = function() {
-    Session.fetchSessions($scope.username)
-    .then(function(sessions) {
+    Session.fetchSessions().then(function(sessions) {
       $scope.sessions = sessions;
     });
-  };
+  }
 
-  // UNCOMMENT THIS WHEN IT WORKS: $scope.fetchSessions();
-
+  // $scope.fetchSessions();
   //this function listens to a event emitted by server.js-'new session' and recieves and appends the new session
   Socket.on('newSession', function(data) {
     $scope.sessions.push(data);
   });
 
+  // TODO: Create functions to make buttons work
   $scope.setSession = Session.setSession;
-
   $scope.createSession = function() {
-    Session.createSession($scope.sessionName)
-    .then(function() {
-      console.log('created session');
-      Socket.emit('session', {sessionName: $scope.sessionName});
-      $scope.joinSession($scope.sessionName);
-    })
-    .catch(function(error) {
-      console.error(error);
-    });
+    Session.createSession($scope.sessionName, $scope.emitCreate);
+    $scope.joinSession($scope.sessionName);
   };
-
-  var emitJoin = function(username, sessionName) {
-    //this function emits a new join event to the socket.
-    Socket.emit('newJoin', {
-      username: username,
-      sessionName: sessionName
-    });
-    $location.path('/lobby');
-  };
-
-  // sessionName is from a given session in the view, or from creation
   $scope.joinSession = function(sessionName) {
+   // sessionName is from a given session in the view, or from creation
     Session.setSession(sessionName);
-    Session.joinSession($scope.username, sessionName)
-    .then(function() {
-      emitJoin($scope.username, sessionName);
+    Session.joinSession(sessionName, $cookies.get('name'), $scope.emitJoin);
+  };
+
+  $scope.emitCreate = function(sessionName) {
+    //this function emits a create event to the socket.
+    Socket.emit('session', {sessionName : sessionName});
+  };
+  $scope.emitJoin = function(username, sessionName) {
+    //this function emits a new join event to the socket.
+    Socket.emit('newJoin', {username: username, sessionName: sessionName});
+  };
+  $scope.friends = [];
+
+  $scope.getFriends = function () {
+    var fbId = $cookies.get('fbId')
+    Session.getFriends(fbId).then(function (info) {
+      for (var i=0; i < info.length; i++) {
+        Session.getFriendInfo(info[i])
+        .then(function (friend) {
+          $scope.friends.push(friend);
+        })
+      }
     })
-    .catch(function(err) {
-      console.error(err);
-    });
   };
 
-
-  $scope.getFriends = function (user) {
-    console.log($cookies)
-    Session.getFriends();
-  };
-
+  $scope.getFriends();
 })
 
 .factory('Session', function($http, $window, $location) {
 
-    var createSession = function(sessionName) {
-      return $http({
-        method: 'POST',
-        url: '/api/sessions',
-        data: {
-          sessionName: sessionName
-        }
+    var createSession = function(sessionName, callback) {
+      return $http.post('/api/sessions', { sessionName: sessionName })
+      .then(function(response) {
+        callback(sessionName); // used for emitting session data
+        return response;
+      }, function(err) {
+        console.error(err);
       });
     };
 
-    var fetchSessions = function(username) {
-      return $http({
-        method:'GET',
-        url: '/api/sessions',
-        params: {
-          username: username
-        }
-      })
-      .then(function(res) {
-        return res.data;
-      })
-      .catch(function(err) {
+    var fetchSessions = function() {
+      return $http.get ('/api/sessions')
+      .then(function(response) {
+        return response.data;
+      }, function(err) {
         console.error(err);
       }); 
     };
 
-    var joinSession = function(username, sessionName) {
-      return $http({
-        method: 'POST',
-        url: '/api/sessions/users',
-        data: {
-          sessionName: sessionName,
-          username: username
-        }
+    var joinSession = function(sessionName, username, callback) {
+      return $http.post('/api/sessions/users', { sessionName: sessionName, username: username })
+      .then(function(response) {
+        callback(username, sessionName); // used for emitting session data
+        $location.path('/lobby');
+        return response;
+      }, function(err) {
+        console.error(err);
       });
     };
 
@@ -109,17 +97,33 @@ angular.module('dinnerDaddy.sessions', [])
     var getSession = function() {
       var sessionName = $window.localStorage.getItem('sessionName');
       return $http.get('/api/sessions/' + sessionName)
-      .then(function(res) {
-        return res.data;
-      })
-      .catch(function(err) {
+      .then(function(session) {
+        return session.data;
+      }, function(err) {
         console.error(err);
       });
     };
 
-    var getFriends = function (user) {
+    var getFriends = function (fbId) {
+      return $http({
+        method: 'GET',
+        url: '/api/friends/:'+ fbId
+      }).then(function (friends) {
+        //console.log('what do we have here? :', friends.data);
+        return friends.data;
+      })
+    };
 
-    }
+    var getFriendInfo = function (friend) {
+      return $http({
+        method: 'POST',
+        url: '/api/friends',
+        data: friend
+      }).then(function (friendInfo) {
+        // console.log('friendinfo retrieved: ', friendInfo.data);
+        return friendInfo.data;
+      })
+    };
 
     return {
       createSession: createSession,
@@ -127,6 +131,7 @@ angular.module('dinnerDaddy.sessions', [])
       joinSession: joinSession,
       setSession: setSession,
       getSession: getSession,
-      getFriends: getFriends
+      getFriends: getFriends,
+      getFriendInfo: getFriendInfo
     }
 })

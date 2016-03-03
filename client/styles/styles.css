@@ -2,6 +2,16 @@ button:disabled {
   color: lightgrey;
 }
 
+.friends {
+  list-style-type: none;
+}
+
+.friendPic {
+  border-radius: 50%;
+  width: 100px;
+  height: 100px;
+}
+
 .bold {
   font-weight: bold;
 }
