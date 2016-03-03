@@ -1,15 +1,18 @@
-var db = require( '../config/db' );
-var Sequelize = require( 'sequelize' );
+var db = require('../config/db');
+var Sequelize = require('sequelize');
+var User = require('../users/users');
 
-var Session = db.define( 'sessions', {
+var Session = db.define('sessions', {
   sessionName : Sequelize.STRING
-} );
+});
 
-Session.sync().then( function() {
-  console.log( "sessions table created" );
-} )
-.catch( function( err ) {
-  console.error( err );
-} );
+var UserSession = db.define('user_sessions', {});
+Session.belongsToMany(User, {through: UserSession});
+User.belongsToMany(Session, {through: UserSession});
+
+UserSession.sync();
+Session.sync();
+User.sync();
+
 
 module.exports = Session;
