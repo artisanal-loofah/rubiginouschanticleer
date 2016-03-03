@@ -77,11 +77,11 @@ io.on( 'connect' , function( socket ){
   //this function listens to the new join event in client/sessions/sessions.js-emitJoin
   socket.on('newJoin', function(data) {
     //this function creates a new or joins an existing socket-room
-    socket.join(data.sessionName);
-    User.findOne({ where: { username: data.username } })
+    socket.join(data.sessionID);
+    User.findOne({ where: { id: data.userID } })
     .then(function(user) {
       //this function emits a newUser event and the new user to a specific room named the session name
-      io.to(data.sessionName).emit('newUser', user);
+      io.to(data.sessionID).emit('newUser', user);
     });
   });
 
