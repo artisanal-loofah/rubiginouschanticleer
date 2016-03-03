@@ -11,7 +11,8 @@ var app = angular.module( 'dinnerDaddy', [
   'ngCookies',
   'btford.socket-io',
   'dinnerDaddy.directive',
-  'dinnerDaddy.dstValidateUser'
+  'dinnerDaddy.dstValidateUser',
+  'dinnerDaddy.location'
   ])
 
 .config( function ( $routeProvider, $httpProvider ) {
@@ -46,6 +47,11 @@ var app = angular.module( 'dinnerDaddy', [
     .when( '/showmatch/:id', {
       templateUrl: 'app/showmatch/showmatch.html',
       controller: 'ShowmatchController',
+      authenticate: true
+    })
+    .when('/location', {
+      templateUrl: 'app/location/location.html',
+      controller: 'locationController',
       authenticate: true
     })
     .otherwise({
