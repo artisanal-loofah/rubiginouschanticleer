@@ -13,9 +13,11 @@ module.exports = {
 
   addSession: function(req, res, next) {
     var sessionName = req.body.sessionName;
+    var sessionLocation = req.body.sessionLocation;
 
     Session.create({
-      sessionName: sessionName
+      sessionName: sessionName,
+      sessionLocation: sessionLocation
     }).then(function(session) {
       res.status = 201;
       res.json(session);

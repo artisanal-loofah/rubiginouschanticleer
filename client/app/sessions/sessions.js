@@ -23,7 +23,7 @@ angular.module('dinnerDaddy.sessions', [])
   $scope.setSession = Session.setSession;
 
   $scope.createSession = function() {
-    Session.createSession($scope.sessionName)
+    Session.createSession($scope.sessionName, $scope.sessionLocation)
     .then(function() {
       console.log('created session');
       Socket.emit('session', {sessionName: $scope.sessionName});
@@ -65,12 +65,14 @@ angular.module('dinnerDaddy.sessions', [])
 
 .factory('Session', function($http, $window, $location) {
 
-    var createSession = function(sessionName) {
+    var createSession = function(sessionName, sessionLocation) {
       return $http({
         method: 'POST',
         url: '/api/sessions',
         data: {
-          sessionName: sessionName
+          sessionName: sessionName,
+          sessionLocation: sessionLocation
+
         }
       });
     };

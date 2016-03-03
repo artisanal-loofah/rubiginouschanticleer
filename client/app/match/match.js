@@ -38,7 +38,7 @@ angular.module( 'dinnerDaddy.match', ['dinnerDaddy.services'] )
   };
 
   $scope.init = function(location) {        //as soon as the view is loaded request the first movie-package here
-    fetchRestaurants('San Jose');
+    fetchRestaurants($scope.session.sessionLocation);
   };
 
   $scope.init();
