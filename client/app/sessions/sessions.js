@@ -18,12 +18,20 @@ angular.module('dinnerDaddy.sessions', [])
   $scope.friends = [];
 
   $scope.sessionName = '';
+  
+  var getFriends = function(userId) {
+    Session.getFriends(userId)
+    .then(function(friends) {
+      $scope.friends = friends;
+    });
+  };
 
   Auth.getUser($cookies.get('fbId'))
   .then(function(data) {
-    $rootScope.user = data.user;
     $window.localStorage.setItem('com.dinnerDaddy', data.token);
     fetchSessions();
+    $rootScope.user = data.user;
+    getFriends(data.user.id);
   })
   .catch(function(err) {
     console.error(err);
