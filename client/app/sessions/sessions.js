@@ -21,6 +21,7 @@ angular.module('dinnerDaddy.sessions', [])
     Session.fetchSessions()
     .then(function(sessions) {
       $scope.sessions = sessions;
+      console.log($scope.sessions, 'this is the scope')
     })
     .catch(function(err) {
       console.error(err);
@@ -62,7 +63,7 @@ angular.module('dinnerDaddy.sessions', [])
   $scope.joinSession = function(index) {
     var session = $scope.sessions[index];
     $rootScope.currentSession = session;
-    Session.setSession(session.sessionName);
+    Session.setSession(session.id);
     Session.joinSession(session.id)
     .then(function() {
       emitJoin($rootScope.user.username, session.sessionName);
@@ -113,8 +114,8 @@ angular.module('dinnerDaddy.sessions', [])
       });
     };
 
-    var setSession = function(sessionName) {
-      $window.localStorage.setItem('sessionName', sessionName);
+    var setSession = function(sessionID) {
+      $window.localStorage.setItem('sessionID', sessionID);
     }; 
     // change getSession call in lobby.js and match.js to pass in session
     // OR just access session from rootScope if possible

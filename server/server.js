@@ -69,7 +69,6 @@ io.on( 'connect' , function( socket ){
   socket.on('session', function(data) {
     Session.findOne({ where: { id: data.sessionID } })
     .then(function(session) {
-      console.log('this is session.datavalue going to send back to client' ,session.dataValues);
       //this function emits an event named newSession and sends the newly created session
       io.emit('newSession', session.dataValues);
     });
