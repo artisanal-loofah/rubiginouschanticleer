@@ -5,10 +5,16 @@ var User = require('../users/users');
 module.exports = {
 
   getAllSessions: function(req, res, next) {
-    Session.findAll()
-    .then(function(sessions) {
-      res.send(sessions);
+    User.find({where: {id: req.user.id}})
+    .then(function(user) {
+      return user.getSessions();
     })
+    .then(function(sessions) {
+      res.json(sessions);
+    })
+    .catch(function(err) {
+      helpers.errorHandler(err, req, res, next);
+    });
   },
 
   addSession: function(req, res, next) {
@@ -26,7 +32,7 @@ module.exports = {
 
   getSession: function(req, res, next) {
     var id = parseInt(req.params.id);
-    Session.findOne({where: {ide: id}})
+    Session.findOne({where: {id: id}})
     .then(function(session) {
       res.json(session);
     }, function(err) {
@@ -35,7 +41,7 @@ module.exports = {
   },
 
   getAllUsers: function(req, res, next) {
-    var sessionId = req.params.sessionId;
+    var sessionId = parseInt(req.params.sessionId);
     Session.find({where: {id: sessionId}})
     .then(function(session) {
       // use Sequelize method provided by belongsToMany relationship
@@ -49,14 +55,11 @@ module.exports = {
     });
   },
 
-  // getOneUser: function(req, res, next) {
-  //   console.log('query', req.query);
-  // },
-
   addUser: function(req, res, next) {
-    User.find({where: {id: req.body.userId}})
+    var sessionId = parseInt(req.params.sessionId);
+    User.find({where: {id: req.user.id}})
     .then(function(user) {
-      Session.find({where: {id: req.body.sessionId}})
+      Session.find({where: {id: sessionId}})
       .then(function(session) {
         return {
           user: user,
@@ -68,6 +71,7 @@ module.exports = {
         var user = data.user;
         // use Sequelize method provided by belongsToMany relationship
         session.addUser(user);
+        res.statusCode = 201;
         res.json(user);
       })
     })

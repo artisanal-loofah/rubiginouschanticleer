@@ -1,33 +1,48 @@
 angular.module('dinnerDaddy.sessions', [])
 
-.controller('SessionsController', function ($scope, $cookies, Session, Auth, Socket) {
+.controller('SessionsController', function ($scope, $rootScope, $cookies, $window, $location, Session, Auth, Socket) {
   $scope.username = $cookies.get('name');
+  $rootScope.currentSession;
   $scope.sessions = [];
 
   $scope.sessionName = '';
 
+  Auth.getUserToken($cookies.get('fbId'))
+  .then(function(token) {
+    $window.localStorage.setItem('com.dinnerDaddy', token);
+  })
+  .catch(function(err) {
+    console.error(err);
+  });
+
   $scope.fetchSessions = function() {
-    Session.fetchSessions($scope.username)
+    Session.fetchSessions()
     .then(function(sessions) {
       $scope.sessions = sessions;
+    })
+    .catch(function(err) {
+      console.error(err);
     });
   };
 
   // UNCOMMENT THIS WHEN IT WORKS: $scope.fetchSessions();
 
   //this function listens to a event emitted by server.js-'new session' and recieves and appends the new session
-  Socket.on('newSession', function(data) {
-    $scope.sessions.push(data);
-  });
+  // COMMENTING THIS OUT FOR NOW AND ADDING in $scope.createSession
+  // Socket.on('newSession', function(data) {
+  //   $scope.sessions.push(data);
+  // });
 
   $scope.setSession = Session.setSession;
 
   $scope.createSession = function() {
     Session.createSession($scope.sessionName, $scope.sessionLocation)
-    .then(function() {
+    .then(function(session) {
       console.log('created session');
-      Socket.emit('session', {sessionName: $scope.sessionName});
-      $scope.joinSession($scope.sessionName);
+      $rootScope.currentSession = session;
+      Socket.emit('session', {sessionName: session.sessionName});
+      $scope.sessions.push(session);
+      $scope.joinSession($scope.sessions.length - 1);
     })
     .catch(function(error) {
       console.error(error);
@@ -44,11 +59,13 @@ angular.module('dinnerDaddy.sessions', [])
   };
 
   // sessionName is from a given session in the view, or from creation
-  $scope.joinSession = function(sessionName) {
-    Session.setSession(sessionName);
-    Session.joinSession($scope.username, sessionName)
+  $scope.joinSession = function(index) {
+    var session = $scope.sessions[index];
+    $rootScope.currentSession = session;
+    Session.setSession(session.sessionName);
+    Session.joinSession(session.id)
     .then(function() {
-      emitJoin($scope.username, sessionName);
+      emitJoin($scope.username, session.sessionName);
     })
     .catch(function(err) {
       console.error(err);
@@ -74,44 +91,37 @@ angular.module('dinnerDaddy.sessions', [])
           sessionLocation: sessionLocation
 
         }
-      });
-    };
-
-    var fetchSessions = function(username) {
-      return $http({
-        method:'GET',
-        url: '/api/sessions',
-        params: {
-          username: username
-        }
       })
       .then(function(res) {
         return res.data;
       })
-      .catch(function(err) {
-        console.error(err);
-      }); 
     };
-    // change to user id not username, call it userId, same with session
-    // SHOULD BE A NUMBER
-    var joinSession = function(username, sessionName) {
+
+    var fetchSessions = function() {
+      return $http({
+        method:'GET',
+        url: '/api/sessions'
+      })
+      .then(function(res) {
+        return res.data;
+      });
+    };
+
+    var joinSession = function(sessionId) {
       return $http({
         method: 'POST',
-        url: '/api/sessions/users',
-        data: {
-          sessionName: sessionName,
-          username: username
-        }
+        url: '/api/sessions/' + sessionId + '/users'
       });
     };
 
     var setSession = function(sessionName) {
       $window.localStorage.setItem('sessionName', sessionName);
     }; 
-
-    var getSession = function() {
+    // change getSession call in lobby.js and match.js to pass in session
+    // OR just access session from rootScope if possible
+    var getSession = function(session) {
       var sessionName = $window.localStorage.getItem('sessionName');
-      return $http.get('/api/sessions/' + sessionName)
+      return $http.get('/api/sessions/' + session.id)
       .then(function(res) {
         return res.data;
       })

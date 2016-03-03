@@ -21,8 +21,21 @@ angular.module( 'dinnerDaddy.auth', [] )
 })
 
 .factory( 'Auth', function($http, $cookies, $location, $window) {
+  var getUserToken = function(fbId) {
+    return $http({
+      method: 'GET',
+      url: '/api/users',
+      params: {
+        fbId: fbId
+      }
+    })
+    .then(function(res) {
+      return res.data;
+    })
+  };
+
   var isAuth = function() {
-    return ($cookies.get('fbId') !== undefined);
+    return !!$cookies.get('fbId');
   };
 
   var signout = function() {
@@ -30,9 +43,14 @@ angular.module( 'dinnerDaddy.auth', [] )
     $cookies.remove("name");
     $cookies.remove("picture");
     $cookies.remove("fbId");
+
+    //clear localStorage
+    $window.localStorage.removeItem('com.dinnerDaddy');
+    $window.localStorage.removeItem('sessionName');
   };
 
   return {
+    getUserToken: getUserToken,
     isAuth: isAuth,
     signout: signout
   };
