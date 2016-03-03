@@ -2,6 +2,17 @@ button:disabled {
   color: lightgrey;
 }
 
+.welcome {
+  text-align: center;
+  font-weight: bold;
+  font-size: 1.5em;
+}
+
+.welcomeinfo {
+  text-align: center;
+  font-style: arial;
+}
+
 #mapcontainer {
   height: 350px;
   width: 650px;

@@ -2,81 +2,49 @@ angular.module('dinnerDaddy.location', [])
 
 .controller('locationController', function ($scope, $location, $cookies, Location) {
 
-  $scope.initializeMap = function () {
-    var map = new google.maps.Map(document.getElementById('mapcontainer'), {
-      center: {
-        lat: 37.7,
-        lng: -122.4
-      },
-      scrollwheel: false,
-      zoom: 10
-    })
-  }
+  $scope.username = $cookies.get('name');
 
-  $scope.verify = function () {
+  $scope.verify = function (username) {
     if (navigator.geolocation) {
-      console.log('are we getting here: ', navigator.geolocation)
       navigator.geolocation.getCurrentPosition(Location.success);
     } else {
       console.error('User rejected location access');
     }
   };
 
-  $scope.initializeMap();
   $scope.verify();
 })
 
-.factory('Location', function ($http) {
+.factory('Location', function ($http, $cookies) {
 
-  var success = function (position) {
+  var username = $cookies.get('name');
+
+  //default map location to SF
+  var map = new google.maps.Map(document.getElementById('mapcontainer'), {
+    center: {
+      lat: 37.75,
+      lng: -122.4
+    },
+    scrollwheel: false,
+    mapTypeId: google.maps.MapTypeId.ROADMAP,
+    zoom: 11
+  });
+
+  var success = function (position, username) {
+    //gathering coordinates from user geolocation
     var coords = new google.maps.LatLng(position.coords.latitude, position.coords.longitude);
     
-    var options = {
-      zoom: 15,
-      center: coords,
-      mapTypeControl: false,
-      navigationControlOptions: {
-        style: google.maps.NavigationControlStyle.SMALL
-      },
-      mapTypeId: google.maps.MapTypeId.ROADMAP
-    };
-    
+    //setting up options for new google Maps Marker
     var marker = new google.maps.Marker({
-        position: coords,
-        map: google.maps.Map(document.getElementById("mapcontainer"), options),
-        title:"You are here!"
+      position: coords,
+      title: username
     });
 
+    marker.setMap(map)
   };
+
   return {
     success: success
   }
+
 });
-
-// function success(position) {
-//   var mapcanvas = document.createElement('div');
-//   mapcanvas.id = 'mapcontainer';
-//   mapcanvas.style.height = '400px';
-//   mapcanvas.style.width = '600px';
-
-//   document.querySelector('article').appendChild(mapcanvas);
-
-//   var coords = new google.maps.LatLng(position.coords.latitude, position.coords.longitude);
-  
-//   var options = {
-//     zoom: 15,
-//     center: coords,
-//     mapTypeControl: false,
-//     navigationControlOptions: {
-//       style: google.maps.NavigationControlStyle.SMALL
-//     },
-//     mapTypeId: google.maps.MapTypeId.ROADMAP
-//   };
-//   var map = new google.maps.Map(document.getElementById("mapcontainer"), options);
-
-//   var marker = new google.maps.Marker({
-//       position: coords,
-//       map: map,
-//       title:"You are here!"
-//   });
-// }
