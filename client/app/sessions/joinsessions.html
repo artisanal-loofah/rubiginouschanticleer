@@ -21,6 +21,7 @@ or the user can join a group that their friend has already created -->
     <ul class="friends" ng-repeat='friend in friends track by $index'>
       <li class="eachFriend">
       <img class="friendPic" src="{{friend.picUrl}}"></img>
+      <p>
       {{ friend.username }}
       </li>
     </ul>
