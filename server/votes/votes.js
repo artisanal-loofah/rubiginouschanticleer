@@ -2,7 +2,7 @@ var Sequelize = require( 'sequelize' );
 
 var db = require( '../config/db' );
 var helpers = require( '../config/helpers' );
-var Session_User = require( '../sessions_users/sessions_users' );
+// var Session_User = require( '../sessions_users/sessions_users' );
 
 
 var Vote = db.define( 'votes', {
@@ -24,7 +24,7 @@ Vote.sync().then( function() {
   console.error( err );
 } );
 
-Vote.belongsTo( Session_User, {foreignKey: 'session_user_id'} );
+// Vote.belongsTo( Session_User, {foreignKey: 'session_user_id'} );
 
 Vote.addVote = function( sessionUser, movie, vote ) {
   return Vote.create( { session_user_id: sessionUser, movie_id: movie, vote: vote } )
