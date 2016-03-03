@@ -21,7 +21,6 @@ angular.module('dinnerDaddy.sessions', [])
     Session.fetchSessions()
     .then(function(sessions) {
       $scope.sessions = sessions;
-      console.log($scope.sessions, 'this is the scope')
     })
     .catch(function(err) {
       console.error(err);
