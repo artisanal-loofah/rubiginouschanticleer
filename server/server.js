@@ -86,8 +86,8 @@ io.on( 'connect' , function( socket ){
   });
 
   socket.on('startSession', function(data) {
-    socket.join(data.sessionName);
-    io.to(data.sessionName).emit('sessionStarted');
+    socket.join(data.sessionId);
+    io.to(data.sessionId).emit('sessionStarted');
   });
 
   // This listener handles broadcasting a matched movie to connected clients.
