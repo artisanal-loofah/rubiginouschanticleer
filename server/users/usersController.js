@@ -19,8 +19,23 @@ module.exports = {
     })
   },
   
-  getFriends: function (profile) {
-
+  getFriends: function (req, res) {
+    var userId = req.params.id;
+    User.find({
+      where: {id: userId},
+      include: [{model: User, as: 'Friends'}]
+    })
+    .then(function(user) {
+      res.json(user.Friends);
+    })
+    .then(function(friends) {
+      res.json(friends);
+    })
+    .catch(function(err) {
+      console.error(err);
+      res.statusCode = 500;
+      res.send(err);
+    });
   },
 
   findOrCreate: function (profile) {
@@ -42,8 +57,15 @@ module.exports = {
         }
       })
       .then(function (user) {
-        return Promise.all(friends.map(function (friend) {
-          return Friendship.findOrCreate(user.dataValues.id, friend.id);
+        return Promise.all(friends.map(function (fbFriend) {
+          return User.find({where: {fb_id: fbFriend.id}})
+          .then(function(friend) {
+            user.addFriend(friend);
+          })
+          .catch(function(err) {
+            console.error(err);
+          })
+          // return Friendship.findOrCreate(user.dataValues.id, friend.id);
         }));
       })
       .catch(function (error) {
