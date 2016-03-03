@@ -32,6 +32,12 @@ angular.module('dinnerDaddy.location', [])
 
   var info = new google.maps.InfoWindow();
 
+/* 
+The plan is to have a marker type specific to users, and a marker type for the designated restaurant
+In a given session, each user will have unique coordinates and in the success function,
+the coordinates will be fed into the server socket. The deployed version will give a shared socket,
+so the coordinates for all group members can bubble up from server to each client */
+
   var success = function (position, username) {
     //gathering coordinates from user geolocation
     var coords = new google.maps.LatLng(position.coords.latitude, position.coords.longitude);
