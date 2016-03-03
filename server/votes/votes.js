@@ -2,7 +2,7 @@ var Sequelize = require( 'sequelize' );
 
 var db = require( '../config/db' );
 var helpers = require( '../config/helpers' );
-// var Session_User = require( '../sessions_users/sessions_users' );
+var UserSession = require( '../sessions/sessions');
 
 
 var Vote = db.define( 'votes', {
@@ -26,10 +26,10 @@ Vote.sync().then( function() {
 
 // Vote.belongsTo( Session_User, {foreignKey: 'session_user_id'} );
 
-Vote.addVote = function( sessionUser, movie, vote ) {
-  return Vote.create( { session_user_id: sessionUser, movie_id: movie, vote: vote } )
-    .catch( function( err ) {
-      console.error( err.stack );
+Vote.addVote = function (sessionUser, movie, vote) {
+  return Vote.create({ session_user_id: sessionUser, movie_id: movie, vote: vote })
+    .catch(function (err) {
+      console.error(err.stack);
     });
 };
 
@@ -39,7 +39,8 @@ Vote.getSessMovieVotes = function( sessionId, movieId ) {
   // objects where each object represents a row
   // for the particular session and movie
   // The Votes table has a session_user_id not a session_id, so we have to do an inner join...
-  return Vote.findAll( { where: { movie_id: movieId }, include: { model: Session_User, attributes: [], where: { session_id: sessionId } } } )
+  console.log("Getting the session movie votes....");
+  return Vote.findAll( { where: { movie_id: movieId }} )
   .catch( function( err ) {
     console.error( err.stack );
   });

@@ -24,4 +24,15 @@ Session.getUserSession = function (sessionId, userId) {
     });
 }
 
+Session.countUsersInSession = function(sessionId) {
+  return UserSession.count({ where: {session_id: sessionId} })
+    .then(function (result) {
+      console.log('Count of users in session: ' + sessionId + ' is ' + result);
+      return result;
+    })
+    .catch(function (err) {
+      console.error("Error getting count in UserSession: ", err);
+    });
+}
+
 module.exports = Session;

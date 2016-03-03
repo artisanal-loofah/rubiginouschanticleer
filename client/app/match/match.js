@@ -51,26 +51,28 @@ angular.module( 'dinnerDaddy.match', ['dinnerDaddy.services'] )
   });
 
   $scope.yes = function() {
-    console.log('clicked on yes');
-    Match.sendVote($scope.session.sessionName, $scope.user.name, currRestaurantIndex, true )
+    Match.sendVote($rootScope.currentSession.sessionName, $scope.user.name, currRestaurantIndex, true )
     // For every 'yes' we want to double check to see if we have a match. If we do,
     // we want to send a socket event out to inform the server.
-    .then(function () {
-      console.log('checking match......');
-      Match.checkMatch($scope.session, $scope.currRestaurant)
-      .then(function (result) {
-        if (result) {
-          Socket.emit( 'foundMatch', { sessionName: $scope.session.sessionName, restaurant: $scope.currRestaurant } );
-        } else {
-          loadNextRestaurant(); 
-        }
+      .then(function () {
+        console.log('checking match......');
+        Match.checkMatch($scope.currentSession.id, currRestaurantIndex)
+          .then(function (result) {
+            console.log('CHECKMATCH RESULT: ', result);
+            if (result) {
+              console.log('FOUND A MATCH..socket emit...');
+              Socket.emit( 'foundMatch', { sessionName: $rootScope.currentSession.sessionName, restaurant: currRestaurantIndex } );
+              Match.matchRedirect(currRestaurantIndex);
+            } else {
+              loadNextRestaurant(); 
+            }
+          });
       });
-    });
   }
 
   $scope.no = function() {
-    // debugger;
     console.log('clicked on NO');
+    console.log('session object:', $rootScope.currentSession);
     Match.sendVote($rootScope.currentSession.sessionName, $scope.user.name, currRestaurantIndex, false);
     loadNextRestaurant();
   }
@@ -100,13 +102,15 @@ angular.module( 'dinnerDaddy.match', ['dinnerDaddy.services'] )
     },
 
     checkMatch: function(session, movie) {
+      console.log('MAKING CHECKMATCH GET REQUEST... w/ ', session, movie);
       // expects session and movie
       // Calls /api/sessions/:sid/match/:mid
       // Should get back either 'false' or the data for the matched movie
       return $http.get(
-        '/api/sessions/' + session.id + '/match/' + movie.id
+        '/api/sessions/' + session + '/match/' + movie
       )
       .then(function (response) {
+        console.log('PROMISE RESOLVED IN CHECKMATCH: ', response);
         return response.data;
       }, function (err) {
         console.error(err);
