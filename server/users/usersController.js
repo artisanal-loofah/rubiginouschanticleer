@@ -43,7 +43,7 @@ module.exports = {
       })
       .then(function (user) {
         return Promise.all(friends.map(function (friend) {
-          return Friendship.friendsFindOrCreate(user.dataValues.id, friend.id);
+          return Friendship.findOrCreate(user.dataValues.id, friend.id);
         }));
       })
       .catch(function (error) {
