@@ -1,7 +1,8 @@
 angular.module('dinnerDaddy.sessions', [])
 
-.controller('SessionsController', function ($scope, $cookies, $window, Session, Auth, Socket) {
+.controller('SessionsController', function ($scope, $rootScope, $cookies, $window, Session, Auth, Socket) {
   $scope.username = $cookies.get('name');
+  $rootScope.currentSession;
   $scope.sessions = [];
 
   $scope.sessionName = '';
@@ -37,6 +38,7 @@ angular.module('dinnerDaddy.sessions', [])
     Session.createSession($scope.sessionName, $scope.sessionLocation)
     .then(function() {
       console.log('created session');
+      $rootScope.currentSession = session;
       Socket.emit('session', {sessionName: $scope.sessionName});
       $scope.joinSession($scope.sessionName);
     })
@@ -55,11 +57,13 @@ angular.module('dinnerDaddy.sessions', [])
   };
 
   // sessionName is from a given session in the view, or from creation
-  $scope.joinSession = function(sessionName) {
-    Session.setSession(sessionName);
-    Session.joinSession($scope.username, sessionName)
+  $scope.joinSession = function(index) {
+    var session = $scope.sessions[index];
+    $rootScope.currentSession = session;
+    Session.setSession(session.sessionName);
+    Session.joinSession(session.id)
     .then(function() {
-      emitJoin($scope.username, sessionName);
+      emitJoin($scope.username, session.sessionName);
     })
     .catch(function(err) {
       console.error(err);
@@ -111,10 +115,11 @@ angular.module('dinnerDaddy.sessions', [])
     var setSession = function(sessionName) {
       $window.localStorage.setItem('sessionName', sessionName);
     }; 
-
-    var getSession = function() {
+    // change getSession call in lobby.js and match.js to pass in session
+    // OR just access session from rootScope if possible
+    var getSession = function(session) {
       var sessionName = $window.localStorage.getItem('sessionName');
-      return $http.get('/api/sessions/' + sessionName)
+      return $http.get('/api/sessions/' + session.id)
       .then(function(res) {
         return res.data;
       })
