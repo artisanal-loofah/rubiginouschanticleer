@@ -6,10 +6,21 @@ angular.module('dinnerDaddy.sessions', [])
 
   $scope.sessionName = '';
 
+  Auth.getUserToken($cookies.get('fbId'))
+  .then(function(token) {
+    $window.localStorage.setItem('com.dinnerDaddy', token);
+  })
+  .catch(function(err) {
+    console.error(err);
+  });
+
   $scope.fetchSessions = function() {
-    Session.fetchSessions($scope.username)
+    Session.fetchSessions()
     .then(function(sessions) {
       $scope.sessions = sessions;
+    })
+    .catch(function(err) {
+      console.error(err);
     });
   };
 
@@ -77,30 +88,23 @@ angular.module('dinnerDaddy.sessions', [])
       });
     };
 
-    var fetchSessions = function(username) {
+    var fetchSessions = function() {
       return $http({
         method:'GET',
-        url: '/api/sessions',
-        params: {
-          username: username
-        }
+        url: '/api/sessions'
       })
       .then(function(res) {
         return res.data;
-      })
-      .catch(function(err) {
-        console.error(err);
-      }); 
+      });
     };
     // change to user id not username, call it userId, same with session
     // SHOULD BE A NUMBER
-    var joinSession = function(username, sessionName) {
+    var joinSession = function(sessionId) {
       return $http({
         method: 'POST',
         url: '/api/sessions/users',
         data: {
-          sessionName: sessionName,
-          username: username
+          sessionId: sessionId
         }
       });
     };
