@@ -56,9 +56,10 @@ module.exports = {
   },
 
   addUser: function(req, res, next) {
+    var sessionId = parseInt(req.body.sessionId);
     User.find({where: {id: req.user.id}})
     .then(function(user) {
-      Session.find({where: {id: req.params.sessionId}})
+      Session.find({where: {id: sessionId}})
       .then(function(session) {
         return {
           user: user,
@@ -70,6 +71,7 @@ module.exports = {
         var user = data.user;
         // use Sequelize method provided by belongsToMany relationship
         session.addUser(user);
+        res.statusCode = 201;
         res.json(user);
       })
     })
