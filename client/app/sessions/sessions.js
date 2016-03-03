@@ -55,12 +55,21 @@ angular.module('dinnerDaddy.sessions', [])
     });
   };
 
+  $scope.friends = [];
 
-  $scope.getFriends = function (user) {
-    console.log($cookies)
-    Session.getFriends();
+  $scope.getFriends = function () {
+    var fbId = $cookies.get('fbId')
+    Session.getFriends(fbId).then(function (info) {
+      for (var i=0; i < info.length; i++) {
+        Session.getFriendInfo(info[i])
+        .then(function (friend) {
+          $scope.friends.push(friend);
+        })
+      }
+    })
   };
 
+  $scope.getFriends();
 })
 
 .factory('Session', function($http, $window, $location) {
@@ -117,9 +126,24 @@ angular.module('dinnerDaddy.sessions', [])
       });
     };
 
-    var getFriends = function (user) {
+    var getFriends = function (fbId) {
+      return $http({
+        method: 'GET',
+        url: '/api/friends/:'+ fbId
+      }).then(function (friends) {
+        return friends.data;
+      })
+    };
 
-    }
+    var getFriendInfo = function (friend) {
+      return $http({
+        method: 'POST',
+        url: '/api/friends',
+        data: friend
+      }).then(function (friendInfo) {
+        return friendInfo.data;
+      })
+    };
 
     return {
       createSession: createSession,
@@ -127,6 +151,7 @@ angular.module('dinnerDaddy.sessions', [])
       joinSession: joinSession,
       setSession: setSession,
       getSession: getSession,
-      getFriends: getFriends
+      getFriends: getFriends,
+      getFriendInfo: getFriendInfo
     }
 })
