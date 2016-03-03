@@ -1,21 +1,33 @@
 angular.module('dinnerDaddy.location', [])
 
-.controller('locationController', function ($scope, $location, $cookies, Location) {
+.controller('locationController', function ($scope, $location, $cookies, LocationFactory) {
 
   $scope.username = $cookies.get('name');
 
-  $scope.verify = function (username) {
+  var verify = function (username) {
     if (navigator.geolocation) {
-      navigator.geolocation.getCurrentPosition(Location.success);
+      navigator.geolocation.getCurrentPosition(LocationFactory.success);
     } else {
       console.error('User rejected location access');
     }
   };
 
-  $scope.verify();
+  $scope.updateMode = function (mode) {
+    if (document.getElementById('mode').value === 'driving') {
+      LocationFactory.updateMode('driving');
+    }
+    if (document.getElementById('mode').value === 'walking') {
+      LocationFactory.updateMode('walking');
+    }
+    if (document.getElementById('mode').value === 'bus') {
+      LocationFactory.updateMode('bus');
+    }
+  };
+
+  verify();
 })
 
-.factory('Location', function ($http, $cookies) {
+.factory('LocationFactory', function ($http, $cookies) {
 
   var username = $cookies.get('name');
 
@@ -61,8 +73,14 @@ so the coordinates for all group members can bubble up from server to each clien
 
   };
 
+  var updateMode = function (mode) {
+    console.log(mode)
+  };
+
   return {
-    success: success
+    success: success,
+    getDistance: getDistance,
+    updateMode: updateMode
   }
 
 });

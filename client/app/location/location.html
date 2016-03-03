@@ -2,6 +2,14 @@
 
 <div class="welcome"> Hello {{username}}</div>
 <div class="welcomeinfo"> Click on markers for more info </div>
-<p>
-<div id="mapcontainer" ng-controller="locationController">  
+
+<div class="fullmap">
+  <div id="mapcontainer"></div>  
+  <div id="controls">
+    <select id="mode" onChange="updateMode()">
+      <option value="driving">Driving</option>
+      <option value="bus">Bus</option>
+      <option value="walking" selected="selected">Walking</option>
+    </select>
+  </div>
 </div>
