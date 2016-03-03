@@ -1,6 +1,6 @@
 angular.module('dinnerDaddy.sessions', [])
 
-.controller('SessionsController', function ($scope, $rootScope, $cookies, $window, Session, Auth, Socket) {
+.controller('SessionsController', function ($scope, $rootScope, $cookies, $window, $location, Session, Auth, Socket) {
   $scope.username = $cookies.get('name');
   $rootScope.currentSession;
   $scope.sessions = [];
@@ -28,19 +28,21 @@ angular.module('dinnerDaddy.sessions', [])
   // UNCOMMENT THIS WHEN IT WORKS: $scope.fetchSessions();
 
   //this function listens to a event emitted by server.js-'new session' and recieves and appends the new session
-  Socket.on('newSession', function(data) {
-    $scope.sessions.push(data);
-  });
+  // COMMENTING THIS OUT FOR NOW AND ADDING in $scope.createSession
+  // Socket.on('newSession', function(data) {
+  //   $scope.sessions.push(data);
+  // });
 
   $scope.setSession = Session.setSession;
 
   $scope.createSession = function() {
     Session.createSession($scope.sessionName, $scope.sessionLocation)
-    .then(function() {
+    .then(function(session) {
       console.log('created session');
       $rootScope.currentSession = session;
-      Socket.emit('session', {sessionName: $scope.sessionName});
-      $scope.joinSession($scope.sessionName);
+      Socket.emit('session', {sessionName: session.sessionName});
+      $scope.sessions.push(session);
+      $scope.joinSession($scope.sessions.length - 1);
     })
     .catch(function(error) {
       console.error(error);
@@ -89,7 +91,10 @@ angular.module('dinnerDaddy.sessions', [])
           sessionLocation: sessionLocation
 
         }
-      });
+      })
+      .then(function(res) {
+        return res.data;
+      })
     };
 
     var fetchSessions = function() {
