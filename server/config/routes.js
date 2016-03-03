@@ -39,8 +39,9 @@ module.exports = function ( app, express ) {
     res.redirect('/#/signin');
   });
 
-  /* USER AUTH */
+  /* USER */
   app.get('/api/users', usersController.getUser);
+  app.get('/api/users/:id/friends', usersController.getFriends);
 
   /* GENRES */
   app.use('/api/genres', helpers.decode);
