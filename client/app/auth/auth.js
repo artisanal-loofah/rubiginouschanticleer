@@ -28,11 +28,14 @@ angular.module( 'dinnerDaddy.auth', [] )
       params: {
         fbId: fbId
       }
-    });
+    })
+    .then(function(res) {
+      return res.data;
+    })
   };
 
   var isAuth = function() {
-    return !!$window.localStorage.getItem('com.dinnerDaddy');
+    return !!$cookies.get('fbId');
   };
 
   var signout = function() {
