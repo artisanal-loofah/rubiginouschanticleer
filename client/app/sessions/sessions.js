@@ -41,11 +41,12 @@ angular.module('dinnerDaddy.sessions', [])
     Socket.emit('newJoin', {username: username, sessionName: sessionName});
   };
 
-  $scope.getFriends = function (user) {
-    console.log($cookies)
-    Session.getFriends();
+  $scope.getFriends = function () {
+    var fbId = $cookies.get('fbId')
+    Session.getFriends(fbId);
   };
 
+  $scope.getFriends();
 })
 
 .factory('Session', function($http, $window, $location) {
@@ -94,9 +95,16 @@ angular.module('dinnerDaddy.sessions', [])
       });
     };
 
-    var getFriends = function (user) {
+    var getFriends = function (fbId) {
+      return $http({
+        method: 'GET',
+        url: '/api/friends/:'+ fbId
+      }).then(function (friends) {
 
-    }
+        //console.log('what do we have here? :', friends.data);
+        return friends.data;
+      })
+    };
 
     return {
       createSession: createSession,
