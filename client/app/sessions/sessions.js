@@ -12,6 +12,7 @@ angular.module('dinnerDaddy.sessions', [])
   .then(function(data) {
     $rootScope.user = data.user;
     $window.localStorage.setItem('com.dinnerDaddy', data.token);
+    $scope.fetchSessions();
   })
   .catch(function(err) {
     console.error(err);
@@ -27,7 +28,6 @@ angular.module('dinnerDaddy.sessions', [])
     });
   };
 
-  $scope.fetchSessions();
 
   Socket.on('newSession', function(data) {
     $scope.sessions.push(data);
@@ -40,7 +40,7 @@ angular.module('dinnerDaddy.sessions', [])
     .then(function(session) {
       console.log('created session');
       $rootScope.currentSession = session;
-      Socket.emit('session', {sessionID: session.id});
+      Socket.emit('session', {sessionId: session.id});
       $scope.sessions.push(session);
       $scope.joinSession($scope.sessions.length - 1);
     })
@@ -49,11 +49,11 @@ angular.module('dinnerDaddy.sessions', [])
     });
   };
 
-  var emitJoin = function(userID, sessionID) {
+  var emitJoin = function(userId, sessionId) {
     //this function emits a new join event to the socket.
     Socket.emit('newJoin', {
-      userID: userID,
-      sessionID: sessionID
+      userId: userId,
+      sessionId: sessionId
     });
     $location.path('/lobby');
   };
@@ -74,7 +74,7 @@ angular.module('dinnerDaddy.sessions', [])
 
 
   $scope.getFriends = function (user) {
-    console.log($cookies);
+    console.log($cookies)
     Session.getFriends();
   };
 
@@ -116,8 +116,8 @@ angular.module('dinnerDaddy.sessions', [])
       });
     };
 
-    var setSession = function(sessionID) {
-      $window.localStorage.setItem('sessionID', sessionID);
+    var setSession = function(sessionId) {
+      $window.localStorage.setItem('sessionId', sessionId);
     }; 
     // change getSession call in lobby.js and match.js to pass in session
     // OR just access session from rootScope if possible
@@ -134,7 +134,7 @@ angular.module('dinnerDaddy.sessions', [])
 
     var getFriends = function (user) {
 
-    };
+    }
 
     return {
       createSession: createSession,

@@ -67,7 +67,7 @@ io.on( 'connect' , function( socket ){
 
   //this recieves the create event emitted in client/sessions/sessions.js-emitCreate
   socket.on('session', function(data) {
-    Session.findOne({ where: { id: data.sessionID } })
+    Session.findOne({ where: { id: data.sessionId } })
     .then(function(session) {
       //this function emits an event named newSession and sends the newly created session
       io.emit('newSession', session.dataValues);
@@ -77,11 +77,11 @@ io.on( 'connect' , function( socket ){
   //this function listens to the new join event in client/sessions/sessions.js-emitJoin
   socket.on('newJoin', function(data) {
     //this function creates a new or joins an existing socket-room
-    socket.join(data.sessionID);
-    User.findOne({ where: { id: data.userID } })
+    socket.join(data.sessionId);
+    User.findOne({ where: { id: data.userId } })
     .then(function(user) {
       //this function emits a newUser event and the new user to a specific room named the session name
-      io.to(data.sessionID).emit('newUser', user);
+      io.to(data.sessionId).emit('newUser', user);
     });
   });
 
