@@ -1,13 +1,13 @@
 angular.module( 'dinnerDaddy.restaurants', [])
 
-.controller('RestaurantsController', function ($scope, Restaurant) {
-  $scope.listRestaurants = function (location) {
-    Restaurant.getRestaurants(location)
-    .then(function (data) {
-      $scope.restaurants = data;
-    });
-  };
-})
+// .controller('RestaurantsController', function ($scope, Restaurant) {
+//   $scope.listRestaurants = function (location) {
+//     Restaurant.getRestaurants(location)
+//     .then(function (data) {
+//       $scope.restaurants = data;
+//     });
+//   };
+// })
 .factory('Restaurant', function ($http) {
   return {
     getRestaurants: function (location) {
