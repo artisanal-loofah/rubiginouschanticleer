@@ -40,7 +40,7 @@ module.exports = function ( app, express ) {
   });
 
   /* USER AUTH */
-  app.get('/api/users', usersController.getUserToken);
+  app.get('/api/users', usersController.getUser);
 
   /* GENRES */
   app.use('/api/genres', helpers.decode);

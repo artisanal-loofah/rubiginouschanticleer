@@ -5,11 +5,14 @@ var jwt =require('jwt-simple')
 
 module.exports = {
 
-  getUserToken: function(req, res) {
+  getUser: function(req, res) {
     User.find({where: {fb_id: req.query.fbId}})
     .then(function(user) {
       var token = jwt.encode(user, 'secret');
-      res.json(token);
+      res.json({
+        user: user,
+        token: token
+      });
     })
     .catch(function(err) {
       console.error(err);
