@@ -7,10 +7,20 @@ var io = require('socket.io')(http);
 var Session = require('./sessions/sessions');
 var User = require('./users/users');
 
-
 var passport = require('passport');
 var Strategy = require('passport-facebook').Strategy;
 var fbconfig = require('./config/fbconfig');
+
+// Added for Yelp API
+var api = require('./config/yelpapi.js');
+var yelpkeys = require('./config/yelpkeys.js');
+
+app.get('/getRestaurants', function (req, res) {
+  api(req.query, function (error, resp, body) {
+    body = JSON.parse(body);
+    res.send(200, body.businesses);
+  });
+});
 
 //setting up serverside facebook request w/ passport
 var usersController = require('./users/usersController');
@@ -49,11 +59,10 @@ passport.deserializeUser(function(obj, cb) {
 app.use(passport.initialize());
 app.use(passport.session());
 
-
-io.on('connect' , function(socket){
-  console.log('we are connected!!');
-  socket.on('disconnect', function() {
-    console.log('were not connected anymore');
+io.on( 'connect' , function( socket ){
+  console.log( 'we are connected!!' );
+  socket.on( 'disconnect', function() {
+    console.log( 'were not connected anymore' );
   });
 
   //this recieves the create event emitted in client/sessions/sessions.js-emitCreate
