@@ -57,6 +57,11 @@ so the coordinates for all group members can bubble up from server to each clien
     })(marker));
   };
 
+
+  var getDistance = function () {
+
+  };
+
   return {
     success: success
   }
