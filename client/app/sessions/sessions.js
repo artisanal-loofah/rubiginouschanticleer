@@ -65,8 +65,8 @@ angular.module('dinnerDaddy.sessions', [])
     $rootScope.currentSession = session;
     Session.setSession(session.id);
     Session.joinSession(session.id)
-    .then(function() {
-      emitJoin($rootScope.user.username, session.sessionName);
+    .then(function(user) {
+      emitJoin(user.id, $rootScope.currentSession.id);
     })
     .catch(function(err) {
       console.error(err);
@@ -111,6 +111,9 @@ angular.module('dinnerDaddy.sessions', [])
       return $http({
         method: 'POST',
         url: '/api/sessions/' + sessionId + '/users'
+      })
+      .then(function(res) {
+        return res.data;
       });
     };
 
