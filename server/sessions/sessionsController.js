@@ -23,7 +23,8 @@ module.exports = {
   },
 
   getSession: function(req, res, next) {
-    Session.findOne({where: {ide: req.params.id}})
+    var id = parseInt(req.params.id);
+    Session.findOne({where: {ide: id}})
     .then(function(session) {
       res.json(session);
     }, function(err) {
@@ -32,7 +33,8 @@ module.exports = {
   },
 
   getAllUsers: function(req, res, next) {
-    Session.find({where: {id: req.params.sessionId}})
+    var sessionId = req.params.sessionId;
+    Session.find({where: {id: sessionId}})
     .then(function(session) {
       // use Sequelize method provided by belongsToMany relationship
       return session.getUsers();
@@ -50,11 +52,9 @@ module.exports = {
   // },
 
   addUser: function(req, res, next) {
-    var userId = parseInt(req.body.userId);
-    var sessionId = parseInt(req.body.sessionId);
-    User.find({where: {id: userId}})
+    User.find({where: {id: req.body.userId}})
     .then(function(user) {
-      Session.find({where: {id: sessionId}})
+      Session.find({where: {id: req.body.sessionId}})
       .then(function(session) {
         return {
           user: user,
