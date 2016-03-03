@@ -5,7 +5,7 @@ var User = require('../users/users');
 module.exports = {
 
   getAllSessions: function(req, res, next) {
-    User.find({where: {id: req.query.userId}})
+    User.find({where: {id: req.user.id}})
     .then(function(user) {
       return user.getSessions();
     })
@@ -32,7 +32,7 @@ module.exports = {
 
   getSession: function(req, res, next) {
     var id = parseInt(req.params.id);
-    Session.findOne({where: {ide: id}})
+    Session.findOne({where: {id: id}})
     .then(function(session) {
       res.json(session);
     }, function(err) {
@@ -56,9 +56,9 @@ module.exports = {
   },
 
   addUser: function(req, res, next) {
-    User.find({where: {id: req.body.userId}})
+    User.find({where: {id: req.user.id}})
     .then(function(user) {
-      Session.find({where: {id: req.body.sessionId}})
+      Session.find({where: {id: req.params.sessionId}})
       .then(function(session) {
         return {
           user: user,
