@@ -30,6 +30,8 @@ angular.module('dinnerDaddy.location', [])
     zoom: 11
   });
 
+  var info = new google.maps.InfoWindow();
+
   var success = function (position, username) {
     //gathering coordinates from user geolocation
     var coords = new google.maps.LatLng(position.coords.latitude, position.coords.longitude);
@@ -37,10 +39,16 @@ angular.module('dinnerDaddy.location', [])
     //setting up options for new google Maps Marker
     var marker = new google.maps.Marker({
       position: coords,
-      title: username
+      title: username,
+      map: map
     });
+    google.maps.event.addListener(marker, 'click', (function (marker) {
+      return function () {
 
-    marker.setMap(map)
+        info.setContent($cookies.get('name'));
+        info.open(map, marker);
+      }
+    })(marker));
   };
 
   return {
