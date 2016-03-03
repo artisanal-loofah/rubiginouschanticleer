@@ -21,7 +21,7 @@ angular.module( 'dinnerDaddy.auth', [] )
 })
 
 .factory( 'Auth', function($http, $cookies, $location, $window) {
-  var getUserToken = function(fbId) {
+  var getUser = function(fbId) {
     return $http({
       method: 'GET',
       url: '/api/users',
@@ -50,7 +50,7 @@ angular.module( 'dinnerDaddy.auth', [] )
   };
 
   return {
-    getUserToken: getUserToken,
+    getUser: getUser,
     isAuth: isAuth,
     signout: signout
   };
