@@ -43,7 +43,7 @@ module.exports = function ( app, express ) {
   /*Getting FB Friends */
 
   app.get('/api/friends/:fbId', friendsController.friendsFindAll);
-  app.get('/api/friends', friendsController.friendsInfo);
+  app.post('/api/friends', friendsController.friendsInfo);
 
   /* GENRES */
   app.get('/api/genres', genresController.getAllGenres );

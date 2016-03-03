@@ -45,7 +45,12 @@ angular.module('dinnerDaddy.sessions', [])
   $scope.getFriends = function () {
     var fbId = $cookies.get('fbId')
     Session.getFriends(fbId).then(function (info) {
-      Session.getFriendInfo(info)
+      for (var i=0; i < info.length; i++) {
+        Session.getFriendInfo(info[i])
+        .then(function (friend) {
+          $scope.friends.push(friend);
+        })
+      }
     })
   };
 
@@ -108,12 +113,14 @@ angular.module('dinnerDaddy.sessions', [])
       })
     };
 
-    var getFriendInfo = function (friendArray) {
+    var getFriendInfo = function (friend) {
       return $http({
-        method: 'GET',
-        url: '/api/friends'
+        method: 'POST',
+        url: '/api/friends',
+        data: friend
       }).then(function (friendInfo) {
-        console.log('friendinfo retrieved: ', friendInfo);
+        // console.log('friendinfo retrieved: ', friendInfo.data);
+        return friendInfo.data;
       })
     };
 

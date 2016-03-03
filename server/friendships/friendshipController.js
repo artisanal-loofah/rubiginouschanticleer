@@ -35,7 +35,11 @@ module.exports = {
   },
 
   friendsInfo: function (request, response) {
-
+    User.findOne({where: {fb_id: request.body.friend_fb_id}})
+    .then(function (friend) {
+      //console.log('friend: ', friend)
+      response.json(friend.dataValues);
+    })
   }
 
 };
