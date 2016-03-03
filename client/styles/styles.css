@@ -2,6 +2,39 @@ button:disabled {
   color: lightgrey;
 }
 
+.welcome {
+  text-align: center;
+  font-weight: bold;
+  font-size: 1.5em;
+}
+
+.welcomeinfo {
+  text-align: center;
+  font-style: arial;
+}
+
+.fullmap {
+  height: 380px;
+  width: 680px;
+  margin: auto;
+}
+
+.fullmap #mapcontainer {
+  height: 350px;
+  width: 650px;
+  margin-left: auto;
+  margin-right: auto;
+  border: 2px solid grey;
+}
+
+.fullmap #controls {
+  float: right;
+  padding: 0px 15px 0px 0px;
+  border-width: 2px;
+  border-color: #ff7f7f;
+
+}
+
 .bold {
   font-weight: bold;
 }
