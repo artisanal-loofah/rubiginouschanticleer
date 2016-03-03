@@ -34,6 +34,7 @@ module.exports = {
   getAllUsers: function(req, res, next) {
     Session.find({where: {id: req.params.sessionId}})
     .then(function(session) {
+      // use Sequelize method provided by belongsToMany relationship
       return session.getUsers();
     })
     .then(function(users) {
@@ -63,6 +64,7 @@ module.exports = {
       .then(function(data) {
         var session = data.session;
         var user = data.user;
+        // use Sequelize method provided by belongsToMany relationship
         session.addUser(user);
         res.json(user);
       })
