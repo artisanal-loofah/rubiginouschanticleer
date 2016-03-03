@@ -1,6 +1,6 @@
 angular.module('dinnerDaddy.sessions', [])
 
-.controller('SessionsController', function ($scope, $cookies, Session, Auth, Socket) {
+.controller('SessionsController', function ($scope, $cookies, $window, Session, Auth, Socket) {
   $scope.username = $cookies.get('name');
   $scope.sessions = [];
 
@@ -97,8 +97,7 @@ angular.module('dinnerDaddy.sessions', [])
         return res.data;
       });
     };
-    // change to user id not username, call it userId, same with session
-    // SHOULD BE A NUMBER
+
     var joinSession = function(sessionId) {
       return $http({
         method: 'POST',
