@@ -1,8 +1,20 @@
 var User = require( './users' );
 var Friendship = require('../friendships/friendshipController');
 var Promise = require('bluebird');
+var jwt =require('jwt-simple')
 
 module.exports = {
+
+  getUserToken: function(req, res) {
+    User.find({where: {fb_id: req.fbId}})
+    .then(function(user) {
+      var token = jwt.encode(user, 'secret');
+      res.json(token);
+    })
+    .catch(function(err) {
+      console.error(err);
+    })
+  },
   
   getFriends: function (profile) {
 
