@@ -41,7 +41,7 @@ module.exports = {
   },
 
   getAllUsers: function(req, res, next) {
-    var sessionId = req.params.sessionId;
+    var sessionId = parseInt(req.params.sessionId);
     Session.find({where: {id: sessionId}})
     .then(function(session) {
       // use Sequelize method provided by belongsToMany relationship
