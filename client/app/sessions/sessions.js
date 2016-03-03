@@ -27,13 +27,11 @@ angular.module('dinnerDaddy.sessions', [])
     });
   };
 
-  // UNCOMMENT THIS WHEN IT WORKS: $scope.fetchSessions();
+  $scope.fetchSessions();
 
-  //this function listens to a event emitted by server.js-'new session' and recieves and appends the new session
-  // COMMENTING THIS OUT FOR NOW AND ADDING in $scope.createSession
-  // Socket.on('newSession', function(data) {
-  //   $scope.sessions.push(data);
-  // });
+  Socket.on('newSession', function(data) {
+    $scope.sessions.push(data);
+  });
 
   $scope.setSession = Session.setSession;
 
@@ -42,7 +40,7 @@ angular.module('dinnerDaddy.sessions', [])
     .then(function(session) {
       console.log('created session');
       $rootScope.currentSession = session;
-      Socket.emit('session', {sessionName: session.sessionName});
+      Socket.emit('session', {sessionID: session.id});
       $scope.sessions.push(session);
       $scope.joinSession($scope.sessions.length - 1);
     })
@@ -76,7 +74,7 @@ angular.module('dinnerDaddy.sessions', [])
 
 
   $scope.getFriends = function (user) {
-    console.log($cookies)
+    console.log($cookies);
     Session.getFriends();
   };
 
@@ -91,12 +89,11 @@ angular.module('dinnerDaddy.sessions', [])
         data: {
           sessionName: sessionName,
           sessionLocation: sessionLocation
-
         }
       })
       .then(function(res) {
         return res.data;
-      })
+      });
     };
 
     var fetchSessions = function() {
@@ -134,7 +131,7 @@ angular.module('dinnerDaddy.sessions', [])
 
     var getFriends = function (user) {
 
-    }
+    };
 
     return {
       createSession: createSession,
@@ -143,5 +140,5 @@ angular.module('dinnerDaddy.sessions', [])
       setSession: setSession,
       getSession: getSession,
       getFriends: getFriends
-    }
+    };
 })
