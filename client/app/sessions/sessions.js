@@ -110,10 +110,7 @@ angular.module('dinnerDaddy.sessions', [])
     var joinSession = function(sessionId) {
       return $http({
         method: 'POST',
-        url: '/api/sessions/users',
-        data: {
-          sessionId: sessionId
-        }
+        url: '/api/sessions/' + sessionId + '/users'
       });
     };
 
