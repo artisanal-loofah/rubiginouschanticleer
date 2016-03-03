@@ -12,8 +12,8 @@ var Strategy = require('passport-facebook').Strategy;
 var fbconfig = require('./config/fbconfig');
 
 // Added for Yelp API
-var api = require('./yelpapi.js');
-var yelpkeys = require('../config/yelpkeys.js');
+var api = require('./config/yelpapi.js');
+var yelpkeys = require('./config/yelpkeys.js');
 
 app.get('/getRestaurants', function (req, res) {
   api(req.query, function (error, resp, body) {

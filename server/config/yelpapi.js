@@ -3,7 +3,7 @@ var n = require('nonce')();
 var request = require('request');  
 var qs = require('querystring');  
 var _ = require('lodash');
-var yelpkeys = require('../config/yelpkeys.js');
+var yelpkeys = require('./yelpkeys.js');
 
 var yelp_request = function(userParameters, callback){
   var httpMethod = 'GET';
