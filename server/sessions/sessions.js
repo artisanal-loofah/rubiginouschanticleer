@@ -3,7 +3,8 @@ var Sequelize = require('sequelize');
 var User = require('../users/users');
 
 var Session = db.define('sessions', {
-  sessionName : Sequelize.STRING
+  sessionName : Sequelize.STRING,
+  location : Sequelize.STRING
 });
 // This is the join table connecting User and Session
 // We get a lot of Sequelize methods for free by using
