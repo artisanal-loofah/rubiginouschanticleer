@@ -1,22 +1,22 @@
 angular.module( 'dinnerDaddy.lobby', [] )
 
-.controller( 'LobbyController', function( $scope, Session, Lobby, Socket, $location, Auth ) {
-  $scope.session = {};
+.controller('LobbyController', function($scope, $rootScope, Session, Lobby, Socket, $location, Auth) {
+  // $scope.session = {};
+  // $scope.username = Auth.getUserName();
+  $scope.users = [];
 
-  Session.getSession()
-  .then( function( session ) {
+  // Session.getSession()
+  // .then( function( session ) {
 
-    $scope.session = session;
+  //   $scope.session = session;
     
-    Lobby.getUsersInOneSession( $scope.session.sessionName )
-    .then( function( users ){
-      $scope.users = users;
-    } );
-
+  Lobby.getUsersInOneSession($rootScope.currentSession.id)
+  .then(function(users){
+    $scope.users = users;
   });
 
-  $scope.username = Auth.getUserName();
-  $scope.users = [];
+  // });
+
 
 
   //this function is listening to any newUser event and recieves/appends the new user
@@ -33,3 +33,22 @@ angular.module( 'dinnerDaddy.lobby', [] )
   } );
 
 } )
+
+.factory('Lobby', function($http) {
+  return {
+    getUsersInOneSession: function(sessionId) {
+      return $http({
+        method:'GET',
+        url: '/api/sessions/'+ sessionId + '/users/',
+        params: {
+          sessionId: sessionId
+        }})
+      .then(function(res) {
+        return res.data;
+      })
+      .catch(function(err) {
+        console.error(err);
+      });
+    }
+  }
+});
