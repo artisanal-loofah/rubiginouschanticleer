@@ -21,15 +21,15 @@ module.exports = {
   
   getFriends: function (req, res) {
     var userId = req.params.id;
+    // this query includes the models connected to the user
+    // by the belongsToMany 'Friend' association under the key
+    // 'Friends'. We can then access with 'user.Friends'.
     User.find({
       where: {id: userId},
       include: [{model: User, as: 'Friends'}]
     })
     .then(function(user) {
       res.json(user.Friends);
-    })
-    .then(function(friends) {
-      res.json(friends);
     })
     .catch(function(err) {
       console.error(err);
@@ -60,12 +60,13 @@ module.exports = {
         return Promise.all(friends.map(function (fbFriend) {
           return User.find({where: {fb_id: fbFriend.id}})
           .then(function(friend) {
+            // use the Sequelize method provided by the belongsToMany
+            // association to add a friend for this user
             user.addFriend(friend);
           })
           .catch(function(err) {
             console.error(err);
           })
-          // return Friendship.findOrCreate(user.dataValues.id, friend.id);
         }));
       })
       .catch(function (error) {
