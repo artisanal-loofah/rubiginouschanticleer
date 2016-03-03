@@ -59,7 +59,7 @@ angular.module( 'dinnerDaddy.match', ['dinnerDaddy.services'] )
         Match.checkMatch($scope.currentSession.id, currRestaurantIndex)
           .then(function (result) {
             console.log('CHECKMATCH RESULT: ', result);
-            if (result) {
+            if (result !== false) {
               console.log('FOUND A MATCH..socket emit...');
               Socket.emit( 'foundMatch', { sessionName: $rootScope.currentSession.sessionName, restaurant: currRestaurantIndex } );
               Match.matchRedirect(currRestaurantIndex);
