@@ -1,4 +1,5 @@
 var Friendship = require('./friendships');
+var User = require('../users/users');
 
 module.exports = {
  
@@ -23,13 +24,16 @@ module.exports = {
   friendsFindAll: function (request, response) {
     var userId = request.params.fbId.slice(1);
 
-    console.log('userId is : ', userId);
-
-    Friendship.findAll({where: {user_id: userId}})
-    .then(function (friends) {
-      console.log('friends are : ', friends)
-      return friends;
-    })
+    User.findOne({where: {fb_id: userId}})
+    .then(function (user) {
+      console.log('this is the user: ', user);
+      var targetId = user.dataValues.id;
+      Friendship.findAll({where: {user_id: targetId}})
+      .then(function (friendship) {
+        console.log('friendships are : ', friendship)
+        response.json(friendship);
+      });
+    });
   }
 
 };

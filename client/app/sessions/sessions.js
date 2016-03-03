@@ -100,7 +100,6 @@ angular.module('dinnerDaddy.sessions', [])
         method: 'GET',
         url: '/api/friends/:'+ fbId
       }).then(function (friends) {
-
         //console.log('what do we have here? :', friends.data);
         return friends.data;
       })
