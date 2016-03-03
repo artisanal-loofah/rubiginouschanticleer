@@ -22,8 +22,8 @@ module.exports = {
     });
   },
 
-  getSessionByName: function(req, res, next) {
-    Session.findOne({where: {sessionName: req.query.sessionName}})
+  getSession: function(req, res, next) {
+    Session.findOne({where: {ide: req.params.id}})
     .then(function(session) {
       res.json(session);
     }, function(err) {
