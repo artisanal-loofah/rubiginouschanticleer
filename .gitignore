@@ -43,3 +43,4 @@ client/lib
 server/config/dinnerDaddy.sqlite
 server/config/fbconfig.js
 server/config/yelpkeys.js
+server/config/googleconfig.js
