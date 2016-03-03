@@ -5,7 +5,7 @@ var moviesController = require('../movies/moviesController.js');
 var prefsController = require('../prefs/prefsController.js');
 var sessionsController = require('../sessions/sessionsController.js');
 var votesController = require('../votes/votesController.js');
-var sessions_usersController = require('../sessions_users/sessions_usersController.js');
+// var sessions_usersController = require('../sessions_users/sessions_usersController.js');
 var passport = require('passport');
 var Strategy = require('passport-facebook').Strategy;
 
@@ -65,10 +65,10 @@ module.exports = function ( app, express ) {
   app.post('/api/votes', votesController.addVote );
 
   /* SESSIONS_USERS */
-  app.get('/api/sessions/users/:sessionName', sessions_usersController.getUsersInOneSession );
-  app.get('/api/sessions/:sessionName', sessionsController.getSessionByName );
-  app.get('/api/sessions/:session_id/:user_id', sessions_usersController.getSessionUserBySessionAndUser );
-  app.post('/api/sessions/users', sessions_usersController.addOneUser );
+  app.get('/api/sessions/users/:sessionId', sessionsController.getAllUsers);
+  app.get('/api/sessions/:id', sessionsController.getSession);
+  // app.get('/api/sessions/:session_id/:user_id', sessionsController.getOneUser);
+  app.post('/api/sessions/users', sessionsController.addUser);
 
   /* MATCHING */
   // This endpoint answers the question, 'For session <id>, do we currently have a match on movie <id>?'

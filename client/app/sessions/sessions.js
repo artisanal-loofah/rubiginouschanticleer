@@ -90,7 +90,8 @@ angular.module('dinnerDaddy.sessions', [])
         console.error(err);
       }); 
     };
-
+    // change to user id not username, call it userId, same with session
+    // SHOULD BE A NUMBER
     var joinSession = function(username, sessionName) {
       return $http({
         method: 'POST',
