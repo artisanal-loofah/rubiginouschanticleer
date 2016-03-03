@@ -5,10 +5,16 @@ var User = require('../users/users');
 module.exports = {
 
   getAllSessions: function(req, res, next) {
-    Session.findAll()
-    .then(function(sessions) {
-      res.send(sessions);
+    User.find({where: {id: req.query.userId}})
+    .then(function(user) {
+      return user.getSessions();
     })
+    .then(function(sessions) {
+      res.json(sessions);
+    })
+    .catch(function(err) {
+      helpers.errorHandler(err, req, res, next);
+    });
   },
 
   addSession: function(req, res, next) {
@@ -48,10 +54,6 @@ module.exports = {
       console.error(err);
     });
   },
-
-  // getOneUser: function(req, res, next) {
-  //   console.log('query', req.query);
-  // },
 
   addUser: function(req, res, next) {
     User.find({where: {id: req.body.userId}})
