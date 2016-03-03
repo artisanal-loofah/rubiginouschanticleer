@@ -26,14 +26,16 @@ module.exports = {
 
     User.findOne({where: {fb_id: userId}})
     .then(function (user) {
-      console.log('this is the user: ', user);
       var targetId = user.dataValues.id;
       Friendship.findAll({where: {user_id: targetId}})
       .then(function (friendship) {
-        console.log('friendships are : ', friendship)
         response.json(friendship);
       });
     });
+  },
+
+  friendsInfo: function (request, response) {
+
   }
 
 };

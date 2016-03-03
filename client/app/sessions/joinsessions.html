@@ -16,6 +16,16 @@ or the user can join a group that their friend has already created -->
     <span class="bold">One last step, {{ username }}!</span>
     Create a new Movie Match group or join an existing one.
   </p>
+
+  <div class="friendsList" ng-controller="SessionsController">
+    <ul class="friends" ng-repeat='friend in friendsList track by $index'>
+      <li class="eachFriend">
+      {{ friend }}
+      </li>
+    </ul>
+
+  </div>
+
   <form name="createSessionForm" class="new-session-cnt" ng-submit="createSession( sessionName )" novalidate>
     <label class="session-label" for="new-session">Create a new group:</label>
     <input name="new-session" id="new-session" type="text" ng-model="sessionName" placeholder="name" required>

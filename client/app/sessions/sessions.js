@@ -40,10 +40,13 @@ angular.module('dinnerDaddy.sessions', [])
     //this function emits a new join event to the socket.
     Socket.emit('newJoin', {username: username, sessionName: sessionName});
   };
+  $scope.friends = [];
 
   $scope.getFriends = function () {
     var fbId = $cookies.get('fbId')
-    Session.getFriends(fbId);
+    Session.getFriends(fbId).then(function (info) {
+      Session.getFriendInfo(info)
+    })
   };
 
   $scope.getFriends();
@@ -105,12 +108,22 @@ angular.module('dinnerDaddy.sessions', [])
       })
     };
 
+    var getFriendInfo = function (friendArray) {
+      return $http({
+        method: 'GET',
+        url: '/api/friends'
+      }).then(function (friendInfo) {
+        console.log('friendinfo retrieved: ', friendInfo);
+      })
+    };
+
     return {
       createSession: createSession,
       fetchSessions: fetchSessions,
       joinSession: joinSession,
       setSession: setSession,
       getSession: getSession,
-      getFriends: getFriends
+      getFriends: getFriends,
+      getFriendInfo: getFriendInfo
     }
 })
