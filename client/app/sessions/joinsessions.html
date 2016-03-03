@@ -20,7 +20,7 @@ or the user can join a group that their friend has already created -->
   <div class="friendsList" ng-controller="SessionsController">
     <ul class="friends" ng-repeat='friend in friends track by $index'>
       <li class="eachFriend">
-      <img src="{{friend.picUrl}}"></img>
+      <img class="friendPic" src="{{friend.picUrl}}"></img>
       {{ friend.username }}
       </li>
     </ul>
