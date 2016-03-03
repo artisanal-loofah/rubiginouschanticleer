@@ -56,7 +56,7 @@ module.exports = {
   },
 
   addUser: function(req, res, next) {
-    var sessionId = parseInt(req.body.sessionId);
+    var sessionId = parseInt(req.params.sessionId);
     User.find({where: {id: req.user.id}})
     .then(function(user) {
       Session.find({where: {id: sessionId}})
