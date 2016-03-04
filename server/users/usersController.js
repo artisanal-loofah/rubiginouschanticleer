@@ -46,14 +46,11 @@ module.exports = {
         if (user) {
           return user;
         } else {
-          User.create({
+          return User.create({
             fb_id: profile.id,
             username: profile.displayName,
             picUrl: profile._json.picture.data.url
-          })
-          .then(function (user) {
-            return user;
-          })
+          });
         }
       })
       .then(function (user) {

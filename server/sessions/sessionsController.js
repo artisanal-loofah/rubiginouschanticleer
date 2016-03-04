@@ -1,16 +1,29 @@
 var helpers = require('../config/helpers');
 var Session = require('./sessions');
 var User = require('../users/users');
+var Promise = require('bluebird');
+var _ = require('underscore');
 
 module.exports = {
-
+  // get sessions created by the user and his Facebook friends
   getAllSessions: function(req, res, next) {
-    User.find({where: {id: req.user.id}})
+    // this query includes the models connected to the user
+    // by the belongsToMany 'Friend' association under the key
+    // 'Friends'. We can then access with 'user.Friends'.
+    User.find({
+      where: {id: req.user.id},
+      include: [{model: User, as: 'Friends'}]
+    })
     .then(function(user) {
-      return user.getSessions();
+      // call Promise.all to return all sessions of friends and user
+      var promises = user.Friends.map(function(friend) {
+        return friend.getSessions();
+      });
+      promises.push(user.getSessions());
+      return Promise.all(promises);
     })
     .then(function(sessions) {
-      res.json(sessions);
+      res.json(_.flatten(sessions));
     })
     .catch(function(err) {
       helpers.errorHandler(err, req, res, next);
