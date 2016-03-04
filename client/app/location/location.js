@@ -28,8 +28,6 @@ angular.module('dinnerDaddy.location', [])
   };
   /* ---- END ---- */
 
-  $scope.distance;
-  $scope.duration;
   $scope.origin;
   $scope.destination;
   $scope.restaurantName = restaurant.name;
@@ -73,7 +71,8 @@ angular.module('dinnerDaddy.location', [])
   var success = function (position, username) {
     //gathering coordinates from user geolocation
     var coords = new google.maps.LatLng(position.coords.latitude, position.coords.longitude)
-    origin.push(position.coords.latitude, position.coords.longitude)
+    origin.push([position.coords.latitude, position.coords.longitude].join(','))
+
     $scope.origin = coords;
 
     var restaurantCoords = new google.maps.LatLng($scope.restaurantLocation[0], $scope.restaurantLocation[1]);
@@ -109,9 +108,10 @@ angular.module('dinnerDaddy.location', [])
       }
     })(restaurant));
 
-    LocationFactory.getDistance($scope.origin, $scope.restaurantLocation).then(function (data) {
-      $scope.distance = data.distance.text;
-      $scope.duration = data.duration.text;
+    LocationFactory.getDistance(origin, $scope.restaurantLocation).then(function (distances) {
+      console.log('distances : ', distances);
+      $scope.distance = distances.distance.text;
+      $scope.duration = distances.duration.text;
     });
     showRoutes();
   };
@@ -137,10 +137,12 @@ so the coordinates for all group members can bubble up from server to each clien
 
   //getDistance expects an array of two Number coordinates 
   var getDistance = function (origin, restaurant) {
+
     var data = {
       origin: origin,
       restaurant: restaurant
     };
+
     return $http({
       method: 'POST',
       url: '/api/location',
@@ -155,7 +157,8 @@ so the coordinates for all group members can bubble up from server to each clien
   };
 
   return {
-    getDistance: getDistance
+    getDistance: getDistance,
+    updateMode: updateMode
   }
 
 });
