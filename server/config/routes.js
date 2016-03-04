@@ -5,6 +5,7 @@ var moviesController = require('../movies/moviesController.js');
 var prefsController = require('../prefs/prefsController.js');
 var sessionsController = require('../sessions/sessionsController.js');
 var votesController = require('../votes/votesController.js');
+var locationController = require('../location/locationController.js');
 // var sessions_usersController = require('../sessions_users/sessions_usersController.js');
 var passport = require('passport');
 var Strategy = require('passport-facebook').Strategy;
@@ -42,6 +43,9 @@ module.exports = function ( app, express ) {
   /* USER */
   app.get('/api/users', usersController.getUser);
   app.get('/api/users/:id/friends', usersController.getFriends);
+
+  /* LOCATION */
+  app.post('/api/location', locationController.getLocations)
 
   /* GENRES */
   app.use('/api/genres', helpers.decode);
