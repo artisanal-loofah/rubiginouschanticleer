@@ -12,19 +12,21 @@ angular.module('dinnerDaddy.location', [])
     mapTypeId: google.maps.MapTypeId.ROADMAP,
     zoom: 11
   });
+
   var info = new google.maps.InfoWindow();
 
   /* --- Test data ---- !!!!
    PROVIDE RESTAURANT INFO LIKE THIS !!! */
   var restaurant = {
     name: 'Golden Boy Pizza',
-    address: '542 Green St, San Francisco, CA 94133'
+    location: [37.79983540000001, -122.4080836]
   };
   /* ---- END ---- */
 
   $scope.distance;
   $scope.duration;
-  $scope.restaurant = restaurant.name;
+  $scope.restaurantName = restaurant.name;
+  $scope.restaurantLocation = restaurant.location;
   $scope.username = $cookies.get('name');
 
   //position is fed in from google
@@ -32,9 +34,11 @@ angular.module('dinnerDaddy.location', [])
     var origin = [];
     //gathering coordinates from user geolocation
     var coords = new google.maps.LatLng(position.coords.latitude, position.coords.longitude)
-    console.log('coords: ', coords)
     origin.push(position.coords.latitude, position.coords.longitude)
+    
+    console.log('restaurant ', $scope.restaurantLocation);
 
+    var restaurantCoords = new google.maps.LatLng($scope.restaurantLocation[0], $scope.restaurantLocation[1]);
     //setting up options for new google Maps Marker
     var user = new google.maps.Marker({
       position: coords,
@@ -43,12 +47,12 @@ angular.module('dinnerDaddy.location', [])
       icon: './assets/guy.png'
     });
 
-    // var restaurant = new google.maps.Marker({
-    //   position: /* NEED COORDINATES */,
-    //   title: restaurant.name,
-    //   map: map,
-    //   icon: './assets/burger.png'
-    // });
+    var restaurant = new google.maps.Marker({
+      position: restaurantCoords,
+      title: $scope.restaurantName,
+      map: map,
+      icon: './assets/burger.png'
+    });
 
     google.maps.event.addListener(user, 'click', (function (user) {
       return function () {
@@ -57,14 +61,14 @@ angular.module('dinnerDaddy.location', [])
       }
     })(user));
 
-    // google.maps.event.addListener(restaurant, 'click', (function (restaurant) {
-    //   return function () {
-    //     info.setContent(restaurant.title);
-    //     info.open(map, restaurant);
-    //   }
-    // })(restaurant));
+    google.maps.event.addListener(restaurant, 'click', (function (restaurant) {
+      return function () {
+        info.setContent(restaurant.title);
+        info.open(map, restaurant);
+      }
+    })(restaurant));
 
-    LocationFactory.getDistance(origin, restaurant.address).then(function (data) {
+    LocationFactory.getDistance(origin, $scope.restaurantLocation).then(function (data) {
       $scope.distance = data.distance.text;
       $scope.duration = data.duration.text;
     });
@@ -104,6 +108,7 @@ so the coordinates for all group members can bubble up from server to each clien
 
   //getDistance expects an array of two Number coordinates 
   var getDistance = function (origin, restaurant) {
+    console.log('restaurant: ', restaurant)
     if (typeof origin[0] === 'number') {
       origin = origin.join(',');
     };
