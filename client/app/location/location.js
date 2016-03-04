@@ -17,7 +17,7 @@ angular.module('dinnerDaddy.location', [])
 
   var distanceMatrixService = new google.maps.DistanceMatrixService();
   var directionService = new google.maps.DirectionsService();
-  var directionRenderer = new google.maps.DirectionsRenderer({preserveViewport: true});
+  var directionRenderer = new google.maps.DirectionsRenderer({preserveViewport: true, suppressMarkers: true});
   directionRenderer.setMap(map);
 
   /* --- Test data ---- !!!!
@@ -33,24 +33,30 @@ angular.module('dinnerDaddy.location', [])
   $scope.restaurantName = restaurant.name;
   $scope.restaurantLocation = restaurant.location;
   $scope.username = $cookies.get('name');
+  $scope.transport = google.maps.TravelMode.DRIVING;
 
-  $scope.updateMode = function (mode) {
-    if (document.getElementById('mode').value === 'driving') {
-      LocationFactory.updateMode('driving');
-    }
-    if (document.getElementById('mode').value === 'walking') {
-      LocationFactory.updateMode('walking');
-    }
-    if (document.getElementById('mode').value === 'bus') {
-      LocationFactory.updateMode('bus');
-    }
+  $scope.data = {
+      availableOptions: [
+        {id: 'driving', name: 'DRIVING'},
+        {id: 'walking', name: 'WALKING'}
+      ],
+    selectedOption: {id: 'driving', name: 'DRIVING'} //This sets the default value of the select in the ui
+  };
+
+  $scope.updateMode = function () {
+    $scope.transport = google.maps.TravelMode[$scope.data.selectedOption.name];
+    LocationFactory.getDistance(origin, $scope.restaurantLocation, $scope.transport).then(function (distances) {
+      $scope.distance = distances.distance.text;
+      $scope.duration = distances.duration.text;
+    });
+    showRoutes();
   };
 
   var showRoutes = function () {
     var routeQuery = {
       origin: $scope.origin,
       destination: $scope.destination,
-      travelMode: google.maps.TravelMode.DRIVING,
+      travelMode: $scope.transport,
       unitSystem: google.maps.UnitSystem.IMPERIAL
     };
 
@@ -81,7 +87,7 @@ angular.module('dinnerDaddy.location', [])
     //setting up options for new google Maps Marker
     var user = new google.maps.Marker({
       position: coords,
-      title: username,
+      title: $scope.username,
       map: map,
       icon: './assets/guy.png'
     });
@@ -96,20 +102,19 @@ angular.module('dinnerDaddy.location', [])
     //Event listeners for marker info
     google.maps.event.addListener(user, 'click', (function (user) {
       return function () {
-        info.setContent($cookies.get('name'));
+        info.setContent($scope.username);
         info.open(map, user);
       }
     })(user));
 
     google.maps.event.addListener(restaurant, 'click', (function (restaurant) {
       return function () {
-        info.setContent(restaurant.title);
+        info.setContent($scope.restaurantName);
         info.open(map, restaurant);
       }
     })(restaurant));
 
-    LocationFactory.getDistance(origin, $scope.restaurantLocation).then(function (distances) {
-      console.log('distances : ', distances);
+    LocationFactory.getDistance(origin, $scope.restaurantLocation, $scope.transport).then(function (distances) {
       $scope.distance = distances.distance.text;
       $scope.duration = distances.duration.text;
     });
@@ -136,13 +141,13 @@ the coordinates will be fed into the server socket. The deployed version will gi
 so the coordinates for all group members can bubble up from server to each client */
 
   //getDistance expects an array of two Number coordinates 
-  var getDistance = function (origin, restaurant) {
+  var getDistance = function (origin, restaurant, transport) {
 
     var data = {
       origin: origin,
-      restaurant: restaurant
+      restaurant: restaurant,
+      transport: transport
     };
-
     return $http({
       method: 'POST',
       url: '/api/location',
@@ -150,15 +155,11 @@ so the coordinates for all group members can bubble up from server to each clien
     }).then(function (distance) {
       return distance.data;
     });
-  };
 
-  var updateMode = function (mode) {
-    console.log(mode)
   };
 
   return {
-    getDistance: getDistance,
-    updateMode: updateMode
+    getDistance: getDistance
   }
 
 });

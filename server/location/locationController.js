@@ -9,7 +9,7 @@ module.exports = {
   getDistance: function (request, response) {
     console.log('request: ', request.body);
 
-    //distance.mode(request.body.mode);
+    distance.mode(request.body.transport.toLowerCase());
 
     var arrOrigin = [request.body.origin];
     var arrRestaurant = [request.body.restaurant];

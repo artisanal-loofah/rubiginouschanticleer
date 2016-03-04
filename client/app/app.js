@@ -7,12 +7,12 @@ var app = angular.module( 'dinnerDaddy', [
   'dinnerDaddy.showmatch',
   'dinnerDaddy.lobby',
   'dinnerDaddy.restaurants',
+  'dinnerDaddy.location',
   'ngRoute',
   'ngCookies',
   'btford.socket-io',
   'dinnerDaddy.directive',
-  'dinnerDaddy.dstValidateUser',
-  'dinnerDaddy.location'
+  'dinnerDaddy.dstValidateUser'
   ])
 
 .config( function ( $routeProvider, $httpProvider ) {
