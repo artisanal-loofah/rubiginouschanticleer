@@ -9,7 +9,6 @@ angular.module( 'dinnerDaddy.lobby', [] )
     $scope.users = users;    
   });
 
-
   $scope.startSession = function( sessionId ) {
     Socket.emit('startSession', { sessionId: sessionId });
   };
@@ -23,6 +22,7 @@ angular.module( 'dinnerDaddy.lobby', [] )
   Socket.on('sessionStarted', function () {
     $location.path('/match');
   });
+  
 })
 .factory('Lobby', function($http) {
   return {
