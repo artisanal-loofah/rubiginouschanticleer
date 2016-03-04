@@ -21,6 +21,7 @@ module.exports = {
       if (distances.status === 'OK') {
         for (var i=0; i < arrOrigin.length; i++) {
           if (distances.rows[0].elements[0].status === 'OK') {
+            console.log('distances: ', distances.rows[0].elements)
             var distanceInfo = {
               distance: distances.rows[0].elements[0].distance,
               duration: distances.rows[0].elements[0].duration
