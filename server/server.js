@@ -94,6 +94,7 @@ io.on( 'connect' , function( socket ){
     socket.join(data.sessionId);
     console.log('the data in foundMatch: ', data);
     io.to(data.sessionId).emit('matchRedirect', data.restaurant);
+    io.to(data.sessionId).emit('info', data.matched);
   });
 });
 

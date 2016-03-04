@@ -44,33 +44,39 @@ angular.module( 'dinnerDaddy.match', ['dinnerDaddy.services'] )
     $scope.init();
   }
 
-  // Listen for the signal to redirect to a 'match found' page.
-  Socket.on('matchRedirect', function (id) {
-    // id refers to the id of the movie that the group matched on
-    Match.matchRedirect(id);
-  });
-
   $scope.yes = function() {
     Match.sendVote($rootScope.currentSession.sessionName, $scope.user.name, currRestaurantIndex, true, $rootScope.currentSession.id)
-    // For every 'yes' we want to double check to see if we have a match. If we do,
-    // we want to send a socket event out to inform the server.
-      .then(function () {
-        Match.checkMatch($scope.currentSession.id, currRestaurantIndex)
-          .then(function (result) {
-            if (result !== false) {
-              Socket.emit('foundMatch', { sessionName: $rootScope.currentSession.sessionName, restaurant: currRestaurantIndex, sessionId: $rootScope.currentSession.id} );
-              $rootScope.matched = $scope.currRestaurant;
-            } else {
-              loadNextRestaurant(); 
-            }
-          });
-      });
+    .then(function () {
+      Match.checkMatch($scope.currentSession.id, currRestaurantIndex)
+        .then(function (result) {
+          if (result !== false) {
+            Socket.emit('foundMatch', {sessionName: $rootScope.currentSession.sessionName, restaurant: currRestaurantIndex, sessionId: $rootScope.currentSession.id, matched: $scope.currRestaurant});
+            $rootScope.matched = $scope.currRestaurant;
+          } else {
+            loadNextRestaurant(); 
+          }
+        });
+    });
   }
 
   $scope.no = function() {
     Match.sendVote($rootScope.currentSession.sessionName, $scope.user.name, currRestaurantIndex, false, $rootScope.currentSession.id);
     loadNextRestaurant();
   }
+
+  // Listen for the signal to redirect to a 'match found' page.
+  Socket.on('matchRedirect', function (id) {
+    // id refers to the id of the movie that the group matched on
+    Match.matchRedirect(id);
+  });
+
+  Socket.on('info', function (data) {
+    // id refers to the id of the movie that the group matched on
+    $rootScope.matched = data;
+    var currentImageURL = data.image_url;
+    $rootScope.currRestaurantImageHD = currentImageURL.slice(0,currentImageURL.length-6) + 'l.jpg'; 
+    console.log('data from socket: ', data);
+  });
 })
 .factory('Match', function ($http, $location) {
   return {

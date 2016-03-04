@@ -9,17 +9,17 @@
   </div>
   <p class="center"><span class="bold">{{ user.name }}</span>, you and your friends have decided on a restaurant!</p>
   <div class="movie">
-    <h2 class="center">YOU ARE EATING AT {{ restaurant.name }}</h2>
+    <h2 class="center">YOU ARE EATING AT {{ matched.name }}</h2>
      <div class="row">
       <!-- We want to size the poster appropriately so we can
       see the buttons at the bottom -->
       <img class="poster col-xs-6" src="{{ currRestaurantImageHD }}">
       <div class="summary col-xs-6">
-        <img src="{{ restaurant.rating_img_url }}"> {{restaurant.review_count}} reviews
+        <img src="{{ matched.rating_img_url }}"> {{matched.review_count}} reviews
       </div>
       <div class="summary col-xs-6">
-        <p>{{ restaurant.snippet_text }}</p>
-        <a href="{{restaurant.url}}">More info</a>
+        <p>{{ matched.snippet_text }}</p>
+        <a href="{{matched.url}}">More info</a>
       </div>
     </div>
   </div>
