@@ -1,9 +1,8 @@
 angular.module( 'dinnerDaddy.match', ['dinnerDaddy.services'] )
 
-.controller( 'MatchController', function( $scope, Match, Auth, Session, Socket, Restaurant, $cookies) {
+.controller( 'MatchController', function( $scope, $rootScope, Match, Auth, Session, Socket, Restaurant, $cookies) {
   $scope.session = {};
   $scope.user = {};
-  $scope.imgPath = 'http://image.tmdb.org/t/p/w500';
 
   $scope.user.name = $cookies.get('name');
 
@@ -13,6 +12,7 @@ angular.module( 'dinnerDaddy.match', ['dinnerDaddy.services'] )
 
   Session.getSession()
   .then(function (session) {
+    console.log('got the session: ', session);
     $scope.session = session;
   });
 
@@ -37,8 +37,9 @@ angular.module( 'dinnerDaddy.match', ['dinnerDaddy.services'] )
       console.log('current restaurant: ', $scope.currRestaurant);
   };
 
-  $scope.init = function(location) {        //as soon as the view is loaded request the first movie-package here
-    fetchRestaurants($scope.session.sessionLocation);
+  $scope.init = function (location) {
+    // Get restaurants with location defined by user when session was created
+    fetchRestaurants($rootScope.currentSession.sessionLocation);
   };
 
   $scope.init();
@@ -66,11 +67,11 @@ angular.module( 'dinnerDaddy.match', ['dinnerDaddy.services'] )
       });
     });
   }
+
   $scope.no = function() {
     // debugger;
     console.log('clicked on NO');
-    Match.sendVote($scope.session.sessionName, $scope.user.name, currRestaurantIndex, false);
-    console.log('the scope contains: ', $scope);
+    Match.sendVote($rootScope.currentSession.sessionName, $scope.user.name, currRestaurantIndex, false);
     loadNextRestaurant();
   }
 })

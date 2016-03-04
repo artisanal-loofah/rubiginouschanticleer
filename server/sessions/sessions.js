@@ -17,5 +17,11 @@ UserSession.sync();
 Session.sync();
 User.sync();
 
+Session.getUserSession = function (sessionId, userId) {
+  return UserSession.findOne({ where: {session_id: sessionId, user_id: userId }})
+    .catch(function (err) {
+      console.log('Error in UserSessions get: ', err);
+    });
+}
 
 module.exports = Session;

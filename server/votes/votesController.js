@@ -7,11 +7,12 @@ var User = require( '../users/users' );
 
 var getAllVotes = function() {};
 
-var addVote = function( req, res ) {
+var addVote = function(req, res) {
   console.log('>>>>>>>>>>in the addVote server side function...');
-  var addVote = function( session_user, movie, vote ) {
-    Vote.addVote( session_user, movie, vote ) // add vote to db
-    .then( function( data ) {
+
+  var addVote = function(sessionName, session_user, movie, vote ) {
+    Vote.addVote(session_user, movie, vote) // add vote to db
+    .then(function (data) {
       // add vote to database
       // return 201 created
       console.log('>>>>>>>>vote has been added to the DB');
@@ -28,7 +29,7 @@ var addVote = function( req, res ) {
     res.send( message );
   };
 
-  var session_user = parseInt( req.body.session_user_id );
+  var session_user = parseInt( req.body.sessionName );
   var movie = parseInt( req.body.movie_id );
   var vote = req.body.vote;
   // var user = parseInt( req.body.user_id );
@@ -41,31 +42,34 @@ var addVote = function( req, res ) {
     .then(function(session){
       var session = session.dataValues.id;
       console.log('session found: ', session);
-      if( !movie ) { // if movie is not provided
+      if( movie === undefined ) { // if movie is not provided
         send400( 'Movie ID not provided' );
         return;
       } else if( !session_user ) { // if session_user is not provided
         if( user && session ) { // but user and session are...
-         Session_User.getSessionUserBySessionIdAndUserId(session, user) // try to look up session_user
+         Session.getUserSession(session, user)
+         // Session_User.getSessionUserBySessionIdAndUserId(session, user) // try to look up session_user
          .then(function (sessionUser) {
             console.log('session and user found: ', session, user);
             console.log('sessionUser is: ', sessionUser);
-            session_user = sessionUser.id;
-            if( !session_user ) { // we were not able to look up session_user
+            session_user = sessionUser.dataValues.user_id;
+            if(!session_user) { // we were not able to look up session_user
               // Could not find the given user in the given session
-              res.status( 404 );
+              res.status(404);
               res.send();
               return;
             } else { // we were able to look up session_user
-              addVote( session_user, movie, vote );
+              console.log('ADDING VOTE...... ');
+              addVote(session_user, movie, vote);
             }
           });
         } else { // session and user not provided, session_user also not provided
-          send400( 'No session, user, or session_user id provided' );
+          send400('No session, user, or session_user id provided');
           return;
         }
       } else { // session_user is provided
-        addVote( session_user, movie, vote );
+        console.log("ADDING VOTE.....");
+        addVote(session_user, movie, vote);
       };
     });
   });

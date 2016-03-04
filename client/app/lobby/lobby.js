@@ -13,7 +13,7 @@ angular.module( 'dinnerDaddy.lobby', [] )
 
   Lobby.getUsersInOneSession($rootScope.currentSession.id)
   .then(function(users){
-    $scope.users = users;
+    $scope.users = users;    
   });
 
   // });
