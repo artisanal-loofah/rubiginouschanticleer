@@ -1,6 +1,13 @@
 angular.module('dinnerDaddy.sessions', [])
 
 .controller('SessionsController', function ($scope, $rootScope, $cookies, $window, $location, Session, Auth, Socket) {
+  $rootScope.currentSession;
+  $rootScope.user;
+  $scope.sessions = [];
+  $scope.friends = [];
+
+  $scope.sessionName = '';
+
   var fetchSessions = function() {
     Session.fetchSessions()
     .then(function(sessions) {
@@ -10,15 +17,7 @@ angular.module('dinnerDaddy.sessions', [])
       console.error(err);
     });
   };
-  
-  // $scope.username = $cookies.get('name');
-  $rootScope.currentSession;
-  $rootScope.user;
-  $scope.sessions = [];
-  $scope.friends = [];
 
-  $scope.sessionName = '';
-  
   var getFriends = function(userId) {
     Session.getFriends(userId)
     .then(function(friends) {
@@ -29,26 +28,17 @@ angular.module('dinnerDaddy.sessions', [])
   Auth.getUser($cookies.get('fbId'))
   .then(function(data) {
     $window.localStorage.setItem('com.dinnerDaddy', data.token);
-    fetchSessions();
     $rootScope.user = data.user;
+    fetchSessions();
     getFriends(data.user.id);
   })
   .catch(function(err) {
     console.error(err);
   });
 
-  var getFriends = function(userId) {
-    Session.getFriends(userId)
-    .then(function(friends) {
-      $scope.friends = friends;
-    });
-  };
-
-  // Socket.on('newSession', function(data) {
-  //   $scope.sessions.push(data);
-  // });
-
-  $scope.setSession = Session.setSession;
+  Socket.on('newSession', function(data) {
+    $scope.sessions.push(data);
+  });
 
   $scope.createSession = function() {
     Session.createSession($scope.sessionName, $scope.sessionLocation)
@@ -56,8 +46,7 @@ angular.module('dinnerDaddy.sessions', [])
       console.log('created session');
       $rootScope.currentSession = session;
       Socket.emit('session', {sessionId: session.id});
-      $scope.sessions.push(session);
-      $scope.joinSession($scope.sessions.length - 1);
+      enterSession(session.id);
     })
     .catch(function(error) {
       console.error(error);
@@ -73,18 +62,21 @@ angular.module('dinnerDaddy.sessions', [])
     $location.path('/lobby');
   };
 
-  // sessionName is from a given session in the view, or from creation
-  $scope.joinSession = function(index) {
-    var session = $scope.sessions[index];
-    $rootScope.currentSession = session;
-    Session.setSession(session.id);
-    Session.joinSession(session.id)
+  var enterSession = function(sessionId) {
+    Session.setSession(sessionId);
+    Session.joinSession(sessionId)
     .then(function(user) {
-      emitJoin(user.id, $rootScope.currentSession.id);
+      emitJoin(user.id, sessionId);
     })
     .catch(function(err) {
       console.error(err);
     });
+  };
+
+  $scope.joinSession = function(index) {
+    var session = $scope.sessions[index];
+    $rootScope.currentSession = session;
+    enterSession(session.id);
   };
 
 })
@@ -128,10 +120,8 @@ angular.module('dinnerDaddy.sessions', [])
     var setSession = function(sessionId) {
       $window.localStorage.setItem('sessionId', sessionId);
     }; 
-    // change getSession call in lobby.js and match.js to pass in session
-    // OR just access session from rootScope if possible
+
     var getSession = function(session) {
-      var sessionName = $window.localStorage.getItem('sessionName');
       return $http.get('/api/sessions/' + session.id)
       .then(function(res) {
         return res.data;

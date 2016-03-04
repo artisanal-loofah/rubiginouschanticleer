@@ -23,7 +23,16 @@ module.exports = {
       return Promise.all(promises);
     })
     .then(function(sessions) {
-      res.json(_.flatten(sessions));
+      // Chains flatten and uniq. Flatten reduces the array
+      // of friend session arrays into one array of sessions.
+      // Uniq ensures that we aren't returning duplicates (cases
+      // where multiple people are in the same session).
+      res.json(_.chain(sessions)
+                .flatten()
+                .uniq(function(item) {
+                  return item.id;
+                })
+                .value());
     })
     .catch(function(err) {
       helpers.errorHandler(err, req, res, next);
