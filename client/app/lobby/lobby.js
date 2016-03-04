@@ -4,12 +4,13 @@ angular.module( 'dinnerDaddy.lobby', [] )
   // $scope.session = {};
   // $scope.username = Auth.getUserName();
   $scope.users = [];
+  $rootScope.currentSession;
 
   // Session.getSession()
   // .then( function( session ) {
 
   //   $scope.session = session;
-    
+
   Lobby.getUsersInOneSession($rootScope.currentSession.id)
   .then(function(users){
     $scope.users = users;
@@ -18,14 +19,13 @@ angular.module( 'dinnerDaddy.lobby', [] )
   // });
 
 
-
   //this function is listening to any newUser event and recieves/appends the new user
   Socket.on( 'newUser', function( data ) {
     $scope.users.push( data );
   } );
 
-  $scope.startSession = function( sessionName ) {
-    Socket.emit( 'startSession', { sessionName: sessionName } );
+  $scope.startSession = function( sessionId ) {
+    Socket.emit( 'startSession', { sessionId: sessionId } );
   };
 
   Socket.on( 'sessionStarted', function() {
