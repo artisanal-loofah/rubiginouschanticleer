@@ -83,8 +83,28 @@ so the coordinates for all group members can bubble up from server to each clien
     getDistance(origin, restaurant.location);
   };
 
+  //getDistance expects an array of two Number coordinates 
   var getDistance = function (origin, restaurant) {
-    console.log('origin is : ', origin);
+    if (typeof origin[0] === 'number') {
+      origin = origin.join(',');
+    };
+    if (typeof restaurant[0] === 'number') {
+      restaurant = restaurant.join(',');
+    };
+
+    var data = {
+      origin: origin,
+      restaurant: restaurant
+    };
+    
+    return $http({
+      method: 'POST',
+      url: '/api/location',
+      data: data
+    }).then(function (distance) {
+      console.log('distance recieved in client: ', distance);
+    })
+
   };
 
   var updateMode = function (mode) {
