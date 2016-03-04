@@ -15,6 +15,11 @@ angular.module('dinnerDaddy.location', [])
 
   var info = new google.maps.InfoWindow();
 
+  var distanceMatrixService = new google.maps.DistanceMatrixService();
+  var directionService = new google.maps.DirectionsService();
+  var directionRenderer = new google.maps.DirectionsRenderer({preserveViewport: true});
+  directionRenderer.setMap(map);
+
   /* --- Test data ---- !!!!
    PROVIDE RESTAURANT INFO LIKE THIS !!! */
   var restaurant = {
@@ -25,20 +30,55 @@ angular.module('dinnerDaddy.location', [])
 
   $scope.distance;
   $scope.duration;
+  $scope.origin;
+  $scope.destination;
   $scope.restaurantName = restaurant.name;
   $scope.restaurantLocation = restaurant.location;
   $scope.username = $cookies.get('name');
 
+  $scope.updateMode = function (mode) {
+    if (document.getElementById('mode').value === 'driving') {
+      LocationFactory.updateMode('driving');
+    }
+    if (document.getElementById('mode').value === 'walking') {
+      LocationFactory.updateMode('walking');
+    }
+    if (document.getElementById('mode').value === 'bus') {
+      LocationFactory.updateMode('bus');
+    }
+  };
+
+  var showRoutes = function () {
+    var routeQuery = {
+      origin: $scope.origin,
+      destination: $scope.destination,
+      travelMode: google.maps.TravelMode.DRIVING,
+      unitSystem: google.maps.UnitSystem.IMPERIAL
+    };
+
+    directionService.route(routeQuery, function (result, status) {
+      if (status === google.maps.DirectionsStatus.OK) {
+        directionRenderer.setDirections(result);
+        bounds = new google.maps.LatLngBounds();
+        bounds.extend(result.routes[0].overview_path[0]);
+        var k = result.routes[0].overview_path.length;
+        bounds.extend(result.routes[0].overview_path[k-1]);
+        panning = true;
+        map.panTo(bounds.getCenter());  
+      }
+    });
+  };
+
   //position is fed in from google
   var success = function (position, username) {
-    var origin = [];
     //gathering coordinates from user geolocation
     var coords = new google.maps.LatLng(position.coords.latitude, position.coords.longitude)
     origin.push(position.coords.latitude, position.coords.longitude)
-    
-    console.log('restaurant ', $scope.restaurantLocation);
+    $scope.origin = coords;
 
     var restaurantCoords = new google.maps.LatLng($scope.restaurantLocation[0], $scope.restaurantLocation[1]);
+    $scope.destination = restaurantCoords;
+
     //setting up options for new google Maps Marker
     var user = new google.maps.Marker({
       position: coords,
@@ -54,6 +94,7 @@ angular.module('dinnerDaddy.location', [])
       icon: './assets/burger.png'
     });
 
+    //Event listeners for marker info
     google.maps.event.addListener(user, 'click', (function (user) {
       return function () {
         info.setContent($cookies.get('name'));
@@ -68,10 +109,11 @@ angular.module('dinnerDaddy.location', [])
       }
     })(restaurant));
 
-    LocationFactory.getDistance(origin, $scope.restaurantLocation).then(function (data) {
+    LocationFactory.getDistance($scope.origin, $scope.restaurantLocation).then(function (data) {
       $scope.distance = data.distance.text;
       $scope.duration = data.duration.text;
     });
+    showRoutes();
   };
 
   var verify = function (username) {
@@ -81,19 +123,6 @@ angular.module('dinnerDaddy.location', [])
       console.error('User rejected location access');
     }
   };
-
-  $scope.updateMode = function (mode) {
-    if (document.getElementById('mode').value === 'driving') {
-      LocationFactory.updateMode('driving');
-    }
-    if (document.getElementById('mode').value === 'walking') {
-      LocationFactory.updateMode('walking');
-    }
-    if (document.getElementById('mode').value === 'bus') {
-      LocationFactory.updateMode('bus');
-    }
-  };
-
 
   verify();
 })
@@ -108,20 +137,10 @@ so the coordinates for all group members can bubble up from server to each clien
 
   //getDistance expects an array of two Number coordinates 
   var getDistance = function (origin, restaurant) {
-    console.log('restaurant: ', restaurant)
-    if (typeof origin[0] === 'number') {
-      origin = origin.join(',');
-    };
-    if (typeof restaurant[0] === 'number') {
-      restaurant = restaurant.join(',');
-    };
-
     var data = {
       origin: origin,
       restaurant: restaurant
     };
-    console.log('data fed out : ', data);
-
     return $http({
       method: 'POST',
       url: '/api/location',
@@ -129,7 +148,6 @@ so the coordinates for all group members can bubble up from server to each clien
     }).then(function (distance) {
       return distance.data;
     });
-
   };
 
   var updateMode = function (mode) {

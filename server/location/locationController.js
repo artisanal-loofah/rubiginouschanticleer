@@ -8,6 +8,9 @@ module.exports = {
 
   getDistance: function (request, response) {
     console.log('request: ', request.body);
+
+    //distance.mode(request.body.mode);
+
     var arrOrigin = [request.body.origin];
     var arrRestaurant = [request.body.restaurant];
 
@@ -20,8 +23,7 @@ module.exports = {
       };
       if (distances.status === 'OK') {
         for (var i=0; i < arrOrigin.length; i++) {
-          if (distances.rows[0].elements[0].status === 'OK') {
-            console.log('distances: ', distances.rows[0].elements)
+          if (distances.rows[0].elements[0].status === 'OK') { 
             var distanceInfo = {
               distance: distances.rows[0].elements[0].distance,
               duration: distances.rows[0].elements[0].duration
