@@ -15,6 +15,7 @@ module.exports = {
       include: [{model: User, as: 'Friends'}]
     })
     .then(function(user) {
+      // call Promise.all to return all sessions of friends and user
       var promises = user.Friends.map(function(friend) {
         return friend.getSessions();
       });
