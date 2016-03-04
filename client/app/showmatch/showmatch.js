@@ -1,6 +1,6 @@
 angular.module( 'dinnerDaddy.showmatch', [] )
 
-.controller( 'ShowmatchController', function( $scope, FetchMovies, Session, Auth, $routeParams, $cookies) {
+.controller( 'ShowmatchController', function( $scope, $rootScope, FetchMovies, Session, Auth, $routeParams, $cookies) {
 
   Session.getSession()
   .then( function( session ) {
@@ -9,12 +9,16 @@ angular.module( 'dinnerDaddy.showmatch', [] )
 
   $scope.user = {};
   $scope.user.name = $cookies.get('name')
+  $scope.restaurant = $rootScope.matched;
+  console.log('SCOPE.RESTAURANT IS..........', $rootScope.matched);
 
   $scope.currMovie = {};
   var id = parseInt( $routeParams.id );
 
-  FetchMovies.getMovie( id )
-  .then( function( movie ) {
+
+
+  FetchMovies.getMovie(id)
+  .then(function(movie) {
     $scope.currMovie = movie;
   });
 

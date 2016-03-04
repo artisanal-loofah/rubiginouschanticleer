@@ -8,7 +8,6 @@ angular.module( 'dinnerDaddy.match', ['dinnerDaddy.services'] )
 
   $scope.restaurants;
   $scope.currRestaurant;
-  $scope.currRestaurantImageHD;
 
   Session.getSession()
   .then(function (session) {
@@ -24,8 +23,7 @@ angular.module( 'dinnerDaddy.match', ['dinnerDaddy.services'] )
         $scope.restaurants = data;
         $scope.currRestaurant = $scope.restaurants[currRestaurantIndex];
         var currentImageURL = $scope.currRestaurant.image_url;
-        $scope.currRestaurantImageHD = currentImageURL.slice(0,currentImageURL.length-6) + 'l.jpg'; 
-        console.log('fetched ok: ', $scope.restaurants);
+        $rootScope.currRestaurantImageHD = currentImageURL.slice(0,currentImageURL.length-6) + 'l.jpg'; 
       });
   };
 
@@ -33,8 +31,7 @@ angular.module( 'dinnerDaddy.match', ['dinnerDaddy.services'] )
       currRestaurantIndex++;
       $scope.currRestaurant = $scope.restaurants[currRestaurantIndex];
       var currentImageURL = $scope.currRestaurant.image_url;
-      $scope.currRestaurantImageHD = currentImageURL.slice(0,currentImageURL.length-6) + 'l.jpg'; 
-      console.log('current restaurant: ', $scope.currRestaurant);
+      $rootScope.currRestaurantImageHD = currentImageURL.slice(0,currentImageURL.length-6) + 'l.jpg'; 
   };
 
   $scope.init = function (location) {
@@ -63,6 +60,9 @@ angular.module( 'dinnerDaddy.match', ['dinnerDaddy.services'] )
               console.log('FOUND A MATCH..socket emit...');
               Socket.emit('foundMatch', { sessionName: $rootScope.currentSession.sessionName, restaurant: currRestaurantIndex, sessionId: $rootScope.currentSession.id} );
               // Match.matchRedirect(currRestaurantIndex);
+              console.log('The current matched restaurant is: ', $scope.currRestaurant);
+              $rootScope.matched = $scope.currRestaurant;
+
             } else {
               loadNextRestaurant(); 
             }
