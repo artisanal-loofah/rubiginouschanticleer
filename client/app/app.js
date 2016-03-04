@@ -55,7 +55,7 @@ var app = angular.module( 'dinnerDaddy', [
       authenticate: true
     })
     .otherwise({
-      redirectTo: '/signin'
+      redirectTo: '/sessions'
     })
 
     $httpProvider.interceptors.push('AttachTokens');
