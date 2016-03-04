@@ -91,8 +91,9 @@ io.on( 'connect' , function( socket ){
 
   // This listener handles broadcasting a matched movie to connected clients.
   socket.on('foundMatch', function(data) {
-    socket.join(data.sessionName);
-    io.to(data.sessionName).emit('matchRedirect', data.movie.id);
+    socket.join(data.sessionId);
+    console.log('the data in foundMatch: ', data);
+    io.to(data.sessionId).emit('matchRedirect', data.restaurant);
   });
 });
 

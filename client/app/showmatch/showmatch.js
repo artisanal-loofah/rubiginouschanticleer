@@ -1,6 +1,6 @@
 angular.module( 'dinnerDaddy.showmatch', [] )
 
-.controller( 'ShowmatchController', function( $scope, FetchMovies, Session, Auth, $routeParams ) {
+.controller( 'ShowmatchController', function( $scope, FetchMovies, Session, Auth, $routeParams, $cookies) {
 
   Session.getSession()
   .then( function( session ) {
@@ -8,7 +8,7 @@ angular.module( 'dinnerDaddy.showmatch', [] )
   });
 
   $scope.user = {};
-  $scope.user.name = $cookies.get('name');
+  $scope.user.name = $cookies.get('name')
 
   $scope.currMovie = {};
   var id = parseInt( $routeParams.id );
@@ -18,4 +18,29 @@ angular.module( 'dinnerDaddy.showmatch', [] )
     $scope.currMovie = movie;
   });
 
+})
+.factory( 'FetchMovies', function( $http ) {
+  return {
+
+    getMovie: function( id ) {
+      return $http.get( '/api/movies/' + id )
+      .then( function( res ) {
+        return res.data;
+      },
+      function( err ) {
+        console.error( err );
+      });
+    },
+
+    getNext10Movies: function( packageNumber ) {
+      return $http.get( '/api/movies/package/' + packageNumber )
+      .then( function( res ) {
+        return res.data;
+      },
+      function( err ) {
+        console.error( err );
+      } );
+    }
+
+  }
 });

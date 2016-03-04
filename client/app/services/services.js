@@ -3,14 +3,14 @@ angular.module('dinnerDaddy.services', [])
 .factory( 'Match', function( $http, $location ) {
   return {
 
-    sendVote: function( sessionName, username, movieID, vote ) {
+    sendVote: function( sessionName, username, movieID, vote, sessionId ) {
       return $http.post( // returns a promise; if you want to make use of a callback simply use .then on the return value.
         '/api/votes', // expect this endpoint to take a json object
                                       // with sessionID and userID
                                       // OR sessionuserID
                                       // AND movieID
                                       // AND vote (boolean true/false where true is yes and false is no)
-        { sessionName: sessionName, username: username, movie_id: movieID, vote: vote })
+        { sessionName: sessionName, username: username, movie_id: movieID, vote: vote, sessionId: sessionId })
       .then( function( response ) { // if the promise is resolved
         return response;
       },

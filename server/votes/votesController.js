@@ -8,10 +8,10 @@ var User = require( '../users/users' );
 var getAllVotes = function() {};
 
 var addVote = function(req, res) {
-  console.log('>>>>>>>>>>in the addVote server side function...');
+  console.log('>>>>>>>>>>in the addVote server side function...', req.body);
 
-  var addVote = function(session_user, movie, vote) {
-    Vote.addVote(session_user, movie, vote) // add vote to db
+  var addVote = function(session_user, movie, vote, sessionId) {
+    Vote.addVote(session_user, movie, vote, sessionId) // add vote to db
     .then(function (data) {
       // add vote to database
       // return 201 created
@@ -27,6 +27,7 @@ var addVote = function(req, res) {
   var session_user = parseInt( req.body.sessionName );
   var movie = parseInt( req.body.movie_id );
   var vote = req.body.vote;
+  var sessionId = req.body.sessionId;
   // var user = parseInt( req.body.user_id );
   // var session = parseInt( req.body.session_id );
   User.findOne({where: {username: req.body.username}})
@@ -54,8 +55,8 @@ var addVote = function(req, res) {
                     res.send();
                     return;
                   } else { // we were able to look up session_user
-                    console.log('ADDING VOTE...... w/: ', session_user, movie, vote);
-                    addVote(session_user, movie, vote);
+                    console.log('ADDING VOTE...... w/: ', session_user, movie, vote, sessionId);
+                    addVote(session_user, movie, vote, sessionId);
                   }
                 });
           } else { // session and user not provided, session_user also not provided
@@ -64,7 +65,7 @@ var addVote = function(req, res) {
           }
           } else { // session_user is provided
             console.log("ADDING VOTE.....");
-            addVote(session_user, movie, vote);
+            addVote(session_user, movie, vote, sessionId);
           };
     });
   });
@@ -118,19 +119,21 @@ var checkMatch = function(req, res, next) {
   // Session_User.countUsersInOneSession( sessionID )
   .then(function (userCount) {
     // get votedata
+    console.log('The # of users in session is: ', userCount);
     Vote.getSessMovieVotes(sessionID, movieID)
     .then(function (voteData) {
       console.log('GOT VOTE DATA: ', voteData);
       // check if votedata is an array
       if( Array.isArray( voteData ) ) {
+        console.log('VOTE DATA IS AN ARRAY....', voteData);
         console.log('VOTE DATA IS AN ARRAY....continueing.... length is: ', voteData.length);
         // if so, compare # of users to array.length. If they are the same,
         if(voteData.length === userCount ) {
           console.log('VOTEDATA LENGTH = USER COUNT.....');
           // reduce votedata array to see if all are true
           var matched = voteData.reduce( function( memo, curr ) {
-            if( curr.vote === false ) {
-              console.log('found a no vote');
+            if(curr.vote === false ) {
+              console.log('found a NO vote in the vote data');
               memo = false;
             }
             return memo;
@@ -141,7 +144,8 @@ var checkMatch = function(req, res, next) {
             console.log('GOT A MATCH!!!!');
             // get movie object for the movie id
             // return movie object
-            mController.getMovie( req, res ); // pass response object to mController so it can res.send movie data
+            mController.getMovie(req, res); // pass response object to mController so it can res.send movie data
+            Vote.deleteVotes(sessionID);
           } else { // did not match
             res.json( false );
           } // end if ( matched )

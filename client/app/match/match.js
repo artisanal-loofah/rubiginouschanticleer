@@ -45,13 +45,13 @@ angular.module( 'dinnerDaddy.match', ['dinnerDaddy.services'] )
   $scope.init();
 
   // Listen for the signal to redirect to a 'match found' page.
-  Socket.on( 'matchRedirect', function( id ) {
+  Socket.on('matchRedirect', function(id) {
     // id refers to the id of the movie that the group matched on
-    Match.matchRedirect( id );
+    Match.matchRedirect(id);
   });
 
   $scope.yes = function() {
-    Match.sendVote($rootScope.currentSession.sessionName, $scope.user.name, currRestaurantIndex, true )
+    Match.sendVote($rootScope.currentSession.sessionName, $scope.user.name, currRestaurantIndex, true, $rootScope.currentSession.id)
     // For every 'yes' we want to double check to see if we have a match. If we do,
     // we want to send a socket event out to inform the server.
       .then(function () {
@@ -61,8 +61,8 @@ angular.module( 'dinnerDaddy.match', ['dinnerDaddy.services'] )
             console.log('CHECKMATCH RESULT: ', result);
             if (result !== false) {
               console.log('FOUND A MATCH..socket emit...');
-              Socket.emit( 'foundMatch', { sessionName: $rootScope.currentSession.sessionName, restaurant: currRestaurantIndex } );
-              Match.matchRedirect(currRestaurantIndex);
+              Socket.emit('foundMatch', { sessionName: $rootScope.currentSession.sessionName, restaurant: currRestaurantIndex, sessionId: $rootScope.currentSession.id} );
+              // Match.matchRedirect(currRestaurantIndex);
             } else {
               loadNextRestaurant(); 
             }
@@ -73,13 +73,13 @@ angular.module( 'dinnerDaddy.match', ['dinnerDaddy.services'] )
   $scope.no = function() {
     console.log('clicked on NO');
     console.log('session object:', $rootScope.currentSession);
-    Match.sendVote($rootScope.currentSession.sessionName, $scope.user.name, currRestaurantIndex, false);
+    Match.sendVote($rootScope.currentSession.sessionName, $scope.user.name, currRestaurantIndex, false, $rootScope.currentSession.id);
     loadNextRestaurant();
   }
 })
 .factory( 'Match', function($http, $location) {
   return {
-    sendVote: function(sessionName, username, movieID, vote) {
+    sendVote: function(sessionName, username, movieID, vote, sessionId) {
       console.log('sending vote....');
       return $http.post( // returns a promise; if you want to make use of a callback simply use .then on the return value.
         '/api/votes', // expect this endpoint to take a json object
@@ -87,7 +87,7 @@ angular.module( 'dinnerDaddy.match', ['dinnerDaddy.services'] )
                                       // OR sessionuserID
                                       // AND movieID
                                       // AND vote (boolean true/false where true is yes and false is no)
-        { sessionName: sessionName, username: username, movie_id: movieID, vote: vote})
+        { sessionName: sessionName, username: username, movie_id: movieID, vote: vote, sessionId: sessionId })
       .then(function (response) { // if the promise is resolved
         console.log('promise resolved in sendvote, resp is: ', response);
         return response;
