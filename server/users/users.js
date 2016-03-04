@@ -7,6 +7,12 @@ var User = db.define( 'users', {
   picUrl: Sequelize.STRING
 });
 
+var UserFriend = db.define('user_friends', {});
+// create a many to many relation between users and friends
+// (who are also users)
+User.belongsToMany(User, {as: 'Friends', through: UserFriend});
+
+UserFriend.sync();
 User.sync().then(function() {
   console.log( "users table created");
 })

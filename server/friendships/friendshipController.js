@@ -2,7 +2,7 @@ var Friendship = require('./friendships');
 
 module.exports = {
  
-  friendsFindOrCreate: function (userid, friendFbId) {
+  findOrCreate: function (userid, friendFbId) {
     return Friendship.findOne({where: {user_id: userid, friend_fb_id: friendFbId}})
     .then(function (friendship) {
       if (friendship) {

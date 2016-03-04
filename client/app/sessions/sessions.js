@@ -15,24 +15,38 @@ angular.module('dinnerDaddy.sessions', [])
   $rootScope.currentSession;
   $rootScope.user;
   $scope.sessions = [];
+  $scope.friends = [];
 
   $scope.sessionName = '';
+  
+  var getFriends = function(userId) {
+    Session.getFriends(userId)
+    .then(function(friends) {
+      $scope.friends = friends;
+    });
+  };
 
   Auth.getUser($cookies.get('fbId'))
   .then(function(data) {
-    $rootScope.user = data.user;
     $window.localStorage.setItem('com.dinnerDaddy', data.token);
     fetchSessions();
+    $rootScope.user = data.user;
+    getFriends(data.user.id);
   })
   .catch(function(err) {
     console.error(err);
   });
 
+  var getFriends = function(userId) {
+    Session.getFriends(userId)
+    .then(function(friends) {
+      $scope.friends = friends;
+    });
+  };
 
-
-  Socket.on('newSession', function(data) {
-    $scope.sessions.push(data);
-  });
+  // Socket.on('newSession', function(data) {
+  //   $scope.sessions.push(data);
+  // });
 
   $scope.setSession = Session.setSession;
 
@@ -71,12 +85,6 @@ angular.module('dinnerDaddy.sessions', [])
     .catch(function(err) {
       console.error(err);
     });
-  };
-
-
-  $scope.getFriends = function (user) {
-    console.log($cookies)
-    Session.getFriends();
   };
 
 })
@@ -133,9 +141,15 @@ angular.module('dinnerDaddy.sessions', [])
       });
     };
 
-    var getFriends = function (user) {
-
-    }
+    var getFriends = function (userId) {
+      return $http({
+        method:'GET',
+        url: '/api/users/' + userId + '/friends'
+      })
+      .then(function(res) {
+        return res.data;
+      });
+    };
 
     return {
       createSession: createSession,

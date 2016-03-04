@@ -19,8 +19,23 @@ module.exports = {
     })
   },
   
-  getFriends: function (profile) {
-
+  getFriends: function (req, res) {
+    var userId = req.params.id;
+    // this query includes the models connected to the user
+    // by the belongsToMany 'Friend' association under the key
+    // 'Friends'. We can then access with 'user.Friends'.
+    User.find({
+      where: {id: userId},
+      include: [{model: User, as: 'Friends'}]
+    })
+    .then(function(user) {
+      res.json(user.Friends);
+    })
+    .catch(function(err) {
+      console.error(err);
+      res.statusCode = 500;
+      res.send(err);
+    });
   },
 
   findOrCreate: function (profile) {
@@ -42,8 +57,16 @@ module.exports = {
         }
       })
       .then(function (user) {
-        return Promise.all(friends.map(function (friend) {
-          return Friendship.friendsFindOrCreate(user.dataValues.id, friend.id);
+        return Promise.all(friends.map(function (fbFriend) {
+          return User.find({where: {fb_id: fbFriend.id}})
+          .then(function(friend) {
+            // use the Sequelize method provided by the belongsToMany
+            // association to add a friend for this user
+            user.addFriend(friend);
+          })
+          .catch(function(err) {
+            console.error(err);
+          })
         }));
       })
       .catch(function (error) {

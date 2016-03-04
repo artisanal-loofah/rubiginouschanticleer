@@ -14,7 +14,7 @@ Friendship.sync().then(function() {
   console.error(err);
 });
 
-
-Friendship.belongsTo(User, {foreignKey: 'id'});
+User.hasMany(Friendship, {foreignKey: 'user_id'});
+Friendship.belongsTo(User, {foreignKey: 'user_id'});
 
 module.exports = Friendship;
