@@ -45,7 +45,7 @@ module.exports = function ( app, express ) {
   app.get('/api/users/:id/friends', usersController.getFriends);
 
   /* LOCATION */
-  app.post('/api/location', locationController.getLocations)
+  app.post('/api/location', locationController.getDistance)
 
   /* GENRES */
   app.use('/api/genres', helpers.decode);

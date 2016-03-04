@@ -24,9 +24,7 @@ angular.module('dinnerDaddy.location', [])
     }
   };
 
-  /** --- Testing data --- */
-  //setTimeout(LocationFactory.getDistance(), 1000);
-  /* ---- END -------*/
+
   verify();
 })
 
@@ -80,7 +78,9 @@ so the coordinates for all group members can bubble up from server to each clien
         info.open(map, marker);
       }
     })(marker));
-    getDistance(origin, restaurant.location);
+    getDistance(origin, restaurant.location).then(function (data) {
+      console.log('data: ', data);
+    })
   };
 
   //getDistance expects an array of two Number coordinates 
@@ -96,14 +96,15 @@ so the coordinates for all group members can bubble up from server to each clien
       origin: origin,
       restaurant: restaurant
     };
-    
+    console.log('data fed out : ', data);
+
     return $http({
       method: 'POST',
       url: '/api/location',
       data: data
     }).then(function (distance) {
-      console.log('distance recieved in client: ', distance);
-    })
+      return distance.data;
+    });
 
   };
 
