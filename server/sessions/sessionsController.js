@@ -2,6 +2,7 @@ var helpers = require('../config/helpers');
 var Session = require('./sessions');
 var User = require('../users/users');
 var Promise = require('bluebird');
+var _ = require('underscore');
 
 module.exports = {
   // get sessions created by the user and his Facebook friends
@@ -14,25 +15,14 @@ module.exports = {
       include: [{model: User, as: 'Friends'}]
     })
     .then(function(user) {
-      var allSessions = [];
-      user.getSessions()
-      .then(function(sessions) {
-        allSessions = allSessions.concat(sessions);
-        return Promise.all(user.Friends.map(function(friend) {
-          return friend.getSessions()
-          .then(function(friendSessions) {
-            allSessions = allSessions.concat(friendSessions);
-            return allSessions;
-          })
-        }))
-      })
-      .then(function(sessions) {
-        res.json(sessions);
-      })
-      // .catch(function(err) {
-      //   helpers.errorHandler(err, req, res, next);
-      // });
-      // return user.getSessions();
+      var promises = user.Friends.map(function(friend) {
+        return friend.getSessions();
+      });
+      promises.push(user.getSessions());
+      return Promise.all(promises);
+    })
+    .then(function(sessions) {
+      res.json(_.flatten(sessions));
     })
     .catch(function(err) {
       helpers.errorHandler(err, req, res, next);
