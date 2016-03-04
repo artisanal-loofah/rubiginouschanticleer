@@ -1,7 +1,7 @@
 var express = require('express');
 var db = require('./config/db');
 var app = express();
-
+// dotenv sets up the process.env variables. Put env variables in a .env file in your root
 require('dotenv').config({path:__dirname+'/../.env'});
 var http = require('http').Server(app);
 var io = require('socket.io')(http);
