@@ -6,9 +6,9 @@ angular.module( 'dinnerDaddy.showmatch', [] )
   .then( function( session ) {
     $scope.session = session;
   });
+
   $scope.user = {};
-  $scope.user.name = Auth.getUserName();
-  $scope.imgPath = 'http://image.tmdb.org/t/p/w500';
+  $scope.user.name = $cookies.get('name');
 
   $scope.currMovie = {};
   var id = parseInt( $routeParams.id );

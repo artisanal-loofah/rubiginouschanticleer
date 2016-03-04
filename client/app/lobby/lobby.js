@@ -1,23 +1,13 @@
 angular.module( 'dinnerDaddy.lobby', [] )
 
-.controller('LobbyController', function($scope, $rootScope, Session, Lobby, Socket, $location, Auth) {
-  // $scope.session = {};
-  // $scope.username = Auth.getUserName();
+.controller('LobbyController', function($scope, $rootScope, $location, Session, Lobby, Socket, Auth) {
   $scope.users = [];
   $rootScope.currentSession;
-
-  // Session.getSession()
-  // .then( function( session ) {
-
-  //   $scope.session = session;
-
+    
   Lobby.getUsersInOneSession($rootScope.currentSession.id)
   .then(function(users){
     $scope.users = users;    
   });
-
-  // });
-
 
   //this function is listening to any newUser event and recieves/appends the new user
   Socket.on( 'newUser', function( data ) {
@@ -28,12 +18,16 @@ angular.module( 'dinnerDaddy.lobby', [] )
     Socket.emit( 'startSession', { sessionId: sessionId } );
   };
 
-  Socket.on( 'sessionStarted', function() {
-    $location.path( '/match' );
-  } );
+  // Listening for newUser event and updates users 
+  Socket.on('newUser', function (data) {
+    $scope.users.push(data);
+  });
 
-} )
-
+  // Listening for started session, relocates to /match path
+  Socket.on('sessionStarted', function () {
+    $location.path('/match');
+  });
+})
 .factory('Lobby', function($http) {
   return {
     getUsersInOneSession: function(sessionId) {
