@@ -2,53 +2,37 @@
 or the user can join a group that their friend has already created -->
 
 <div id="match" class="container">
-  <div class="header center row">
-    <!-- visible-xs and -sm denote that the element is visible on a small screen -->
-    <h2 class="col-xs-12 visible-xs visible-sm">
-      <div class="session-name large">Join or create a group</div>
-    </h2>
-    <!-- hidden-xs and hidden-sm denote that the element is invisible on a small screen -->
-    <h2 class="col-xs-12 hidden-xs hidden-sm">
-      <span> Join or create a group </span>
-    </h2>
-  </div>
-  <p class="center">
-    <span class="bold">One last step, {{ user.username }}!</span>
-    Create a new Dinner Daddy group or join an existing one.
-  </p>
 
-  <div class="friendsList">
-    <ul class="friends" ng-repeat='friend in friends track by $index'>
-      <li class="eachFriend">
-        <div class="friendinfo">
-        <img class="friendpic" src="{{friend.picUrl}}"></img>
-        <p>
-        <div class="friendname"> {{ friend.username }} </div>
-        </div>
-      </li>
-    </ul>
+  <div class="titleinfo">
+    <span>Join or create a group</span>
+  </div>
+
+  <div class="welcomesession">
+    <span class="bold">Hello {{ user.username }}!</span>
+    <p>
+    Create a new Dinner Daddy group or join an existing one.
   </div>
 
   <form name="createSessionForm" class="new-session-cnt" ng-submit="createSession()" novalidate>
     <div class="creategroupform">
+    <div class="creategroupbar">
     <label class="session-label" for="new-session">Create a new group:</label>
-    <input name="new-session" id="new-session" type="text" ng-model="sessionName" placeholder="name" required>
-    <p>
-    <label class="session-location-label" for="session-location">Provide a zip code or city:</label>
-    <input name="session-location" id="session-location" type="text" ng-model="sessionLocation" placeholder="city/zipcode" required>
+    <input name="new-session" class="form-control" id="new-session" type="text" ng-model="sessionName" placeholder="name" required>
+    </div>
+    <div class="zipcodebar">
+    <label class="session-label" for="session-location">Provide a zip code or city:</label>
+    <input name="session-location" class="form-control" id="session-location" type="text" ng-model="sessionLocation" placeholder="city/zipcode" required>
+    </div>
     </div>
     <div class="creategroupbtn">
-    <button class="btn btn-primary btn-block" ng-disabled="createSessionForm.$invalid">Create Group</button>
+    <button class="btn btn-primary btn-lg btn-block" ng-disabled="createSessionForm.$invalid">Create Group</button>
     </div>
-  </form>
-<p>
+  </form> 
 <!-- the hr has to be in a div for bootstrap -->
-<div class="joinsessions">
-  <div class='row span12'>
-  </div>
-  <div class="join-group-cnt block-center" ng-repeat="session in sessions track by $index">
-    <button class="col-xs-12 btn-mobile visible-xs visible-sm" ng-click="joinSession($index)">Join <span class="bold">{{ session.sessionName }}</span></button>
-    <button class="col-xs-12 btn-laptop hidden-xs hidden-sm" ng-click="joinSession($index)">Join <span class="bold">{{ session.sessionName }}</span></button>
+  <div class="joinsessions">
+    <div class="join-group" ng-repeat="session in sessions track by $index">
+      <button class="btn btn-default btn-lg btn-block" ng-click="joinSession($index)">Join <span class="bold">{{ session.sessionName }}</span></button>
+    </div>
   </div>
 
 </div>
