@@ -28,6 +28,13 @@ angular.module( 'dinnerDaddy.lobby', [] )
     $location.path('/match');
   });
 
+  if (!$rootScope.user) {
+    Auth.getUser($cookies.get('fbId'))
+    .then(function(data) {
+      $rootScope.user = data.user;
+    });
+  } 
+
 })
 .factory('Lobby', function ($http) {
   return {
