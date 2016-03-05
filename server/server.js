@@ -85,8 +85,9 @@ io.on( 'connect' , function( socket ){
   });
 
   socket.on('startSession', function(data) {
+    console.log(data.sessionId, '=================================yothis is data');
     socket.join(data.sessionId);
-    io.to(data.sessionId).emit('sessionStarted');
+    io.to(data.sessionId).emit('sessionStarted', data.restaurants);
   });
 
   // This listener handles broadcasting a matched restaurant to connected clients.

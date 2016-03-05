@@ -1,16 +1,21 @@
 angular.module( 'dinnerDaddy.lobby', [] )
 
-.controller('LobbyController', function($scope, $rootScope, $location, Session, Lobby, Socket, Auth) {
+.controller('LobbyController', function($scope, $rootScope, $location, Session, Lobby, Socket, Auth, Restaurant) {
   $scope.users = [];
   $rootScope.currentSession;
-    
+  $rootScope.restaurants;
   Lobby.getUsersInOneSession($rootScope.currentSession.id)
   .then(function (users){
     $scope.users = users;    
   });
 
   $scope.startSession = function (sessionId) {
-    Socket.emit('startSession', {sessionId: sessionId});
+    Restaurant.getRestaurants($rootScope.currentSession.sessionLocation)
+    .then(function(data){
+      var shuffledRestaurants = _.shuffle(data);
+      console.log(shuffledRestaurants, 'start session here shuffled');
+      Socket.emit('startSession', {sessionId: sessionId, restaurants: shuffledRestaurants});
+    });
   };
 
   // Listening for newUser event and updates users 
@@ -19,7 +24,8 @@ angular.module( 'dinnerDaddy.lobby', [] )
   });
 
   // Listening for started session, relocates to /match path
-  Socket.on('sessionStarted', function () {
+  Socket.on('sessionStarted', function (data) {
+    $rootScope.restaurants = data;
     $location.path('/match');
   });
 

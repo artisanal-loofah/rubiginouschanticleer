@@ -3,9 +3,11 @@ angular.module( 'dinnerDaddy.match', ['dinnerDaddy.services'] )
 .controller( 'MatchController', function( $scope, $rootScope, Match, Auth, Session, Socket, Restaurant, $cookies, $window) {
   $scope.session = {};
 
-  $scope.restaurants;
-  $scope.currRestaurant;
-
+  $scope.restaurants = $rootScope.restaurants;
+  $scope.currRestaurant = $rootScope.restaurants[0];
+  var currentImageURL = $scope.currRestaurant.image_url;
+  $rootScope.currRestaurantImageHD = currentImageURL.slice(0,currentImageURL.length-6) + 'l.jpg'; 
+  
   var currRestaurantIndex = 0;
 
   var fetchRestaurants = function (location) {
@@ -32,15 +34,16 @@ angular.module( 'dinnerDaddy.match', ['dinnerDaddy.services'] )
 
   // Check if there is a currentSession on rootScope, if not create a new session
   // This is needed when the page is refreshed so we don't lose $rootScope.currentSession
-  if (!$rootScope.currentSession) {
-    Session.getSession($window.localStorage.getItem('sessionId'))
-    .then(function (session) {
-      $rootScope.currentSession = session;
-      $scope.init();
-    });
-  } else {
-    $scope.init();
-  }
+
+  // if (!$rootScope.currentSession) {
+  //   Session.getSession($window.localStorage.getItem('sessionId'))
+  //   .then(function (session) {
+  //     $rootScope.currentSession = session;
+  //     $scope.init();
+  //   });
+  // } else {
+  //   $scope.init();
+  // }
 
   // Check if there is a current user on rootScope, if not get new user.
   // This is needed when the page is refreshed so we don't lose $rootScope.user.username
