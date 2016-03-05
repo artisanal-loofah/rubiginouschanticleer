@@ -20,26 +20,34 @@ or the user can join a group that their friend has already created -->
   <div class="friendsList">
     <ul class="friends" ng-repeat='friend in friends track by $index'>
       <li class="eachFriend">
-        <img class="friendPic" src="{{friend.picUrl}}"></img>
-        <p>{{ friend.username }}</p>
+        <div class="friendinfo">
+        <img class="friendpic" src="{{friend.picUrl}}"></img>
+        <p>
+        <div class="friendname"> {{ friend.username }} </div>
+        </div>
       </li>
     </ul>
   </div>
 
   <form name="createSessionForm" class="new-session-cnt" ng-submit="createSession()" novalidate>
+    <div class="creategroupform">
     <label class="session-label" for="new-session">Create a new group:</label>
     <input name="new-session" id="new-session" type="text" ng-model="sessionName" placeholder="name" required>
+    <p>
     <label class="session-location-label" for="session-location">Provide a zip code or city:</label>
     <input name="session-location" id="session-location" type="text" ng-model="sessionLocation" placeholder="city/zipcode" required>
-
-    <button class="col-xs-5 pull-right btn-mobile visible-xs visible-sm" ng-disabled="createSessionForm.$invalid">Create Group</button>
-    <button class="col-xs-5 pull-right btn-laptop hidden-xs hidden-sm" ng-disabled="createSessionForm.$invalid">Create Group</button>
+    </div>
+    <div class="creategroupbtn">
+    <button class="btn btn-primary btn-block" ng-disabled="createSessionForm.$invalid">Create Group</button>
+    </div>
   </form>
+<p>
 <!-- the hr has to be in a div for bootstrap -->
-<div class='row span12'>
-  <hr>
-</div>
-<div class="join-group-cnt block-center" ng-repeat="session in sessions track by $index">
-  <button class="col-xs-12 btn-mobile visible-xs visible-sm" ng-click="joinSession($index)">Join <span class="bold">{{ session.sessionName }}</span></button>
-  <button class="col-xs-12 btn-laptop hidden-xs hidden-sm" ng-click="joinSession($index)">Join <span class="bold">{{ session.sessionName }}</span></button>
+<div class="joinsessions">
+  <div class='row span12'>
+  </div>
+  <div class="join-group-cnt block-center" ng-repeat="session in sessions track by $index">
+    <button class="col-xs-12 btn-mobile visible-xs visible-sm" ng-click="joinSession($index)">Join <span class="bold">{{ session.sessionName }}</span></button>
+    <button class="col-xs-12 btn-laptop hidden-xs hidden-sm" ng-click="joinSession($index)">Join <span class="bold">{{ session.sessionName }}</span></button>
+  </div>
 </div>

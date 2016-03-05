@@ -13,10 +13,44 @@ button:disabled {
   font-style: arial;
 }
 
+.friends {
+  list-style-type: none;
+}
+
 .fullmap {
   height: 380px;
   width: 680px;
   margin: auto;
+}
+
+.friendinfo {
+  width: 200px;
+  height: 200px;
+  text-align: center;
+  border-radius: 25px;
+}
+
+.friendpic {
+  border-radius: 50%;
+  padding: 6px 0px 0px 0px;
+}
+
+.main-nav-menu-icon {
+  width: 40px;
+  margin: 0px 15px 0px 0px;
+}
+
+.nav-list {
+  list-style-type: none;
+}
+
+.nav-options {
+  float: left;
+  text-align: left;
+}
+
+.joinsessions {
+  padding: 0px 0px 0px 0px;
 }
 
 .fullmap #mapcontainer {
@@ -64,15 +98,17 @@ button:disabled {
   width: 100%;
 }
 
-
-.laptop-buttons {
-  width: 100%;
-  position: fixed;
-  bottom: 0;
-  margin: 5px;
+.creategroupbtn {
+  margin-left: auto;
+  margin-right: auto;
+  border-radius: 5px;
 }
 
-.mobile-buttons {
+.creategroupform {
+  padding: 0px 0px 0px 0px;
+}
+
+.laptop-buttons {
   width: 100%;
   position: fixed;
   bottom: 0;
@@ -82,17 +118,6 @@ button:disabled {
 .btn-laptop {
   font-size: 2em;
   border-radius: 5px;
-}
-
-.btn-mobile {
-  height: 80px;
-  width: 80px;
-  font-size: 1em;
-  border-radius: 50%;
-}
-
-.right-mobile {
-  margin-right: 40px;
 }
 
 .right-laptop {
@@ -134,7 +159,6 @@ hr {
 
 .session-name {
   position: relative;
-  left: 35%;
   font-family: 'Franklin Gothic Medium', 'Franklin Gothic', 'ITC Franklin Gothic', Arial, sans-serif;
   font-size: 20px;
 }
