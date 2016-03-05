@@ -17,15 +17,6 @@ or the user can join a group that their friend has already created -->
     Create a new Dinner Daddy group or join an existing one.
   </p>
 
-  <div class="friendsList">
-    <ul class="friends" ng-repeat='friend in friends track by $index'>
-      <li class="eachFriend">
-        <img class="friendPic" src="{{friend.picUrl}}"></img>
-        <p>{{ friend.username }}</p>
-      </li>
-    </ul>
-  </div>
-
   <form name="createSessionForm" class="new-session-cnt" ng-submit="createSession()" novalidate>
     <label class="session-label" for="new-session">Create a new group:</label>
     <input name="new-session" id="new-session" type="text" ng-model="sessionName" placeholder="name" required>
