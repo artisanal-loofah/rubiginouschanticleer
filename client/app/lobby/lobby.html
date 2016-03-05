@@ -3,7 +3,7 @@ They will press start when everyone has joined -->
 
 <div id="match" class="container">
   <p class="center">
-    <span class="bold">Hi, {{ username }}!</span>
+    <span class="bold">Hi, {{ user.username }}!</span>
     Once all your friends are here, click start.
   </p>
   <div class="join-group-cnt block-center" ng-repeat="session in sessions">
@@ -15,10 +15,11 @@ They will press start when everyone has joined -->
     <hr>
   </div>
 
-  <div class="users" ng-repeat="user in users">
-    <ul>
-      <li>{{ user.username }}</li>
-    </ul>
+  <div class="friends" ng-repeat="friend in friends track by $index">
+    <div>
+      <img class="friend-pic" src="{{friend.picUrl}}"></img>
+      {{ friend.username }}
+    </div>
   </div>
 <div>
   <button ng-click="startSession( currentSession.id )">Start</button>
