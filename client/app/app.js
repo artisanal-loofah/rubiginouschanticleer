@@ -51,12 +51,12 @@ var app = angular.module( 'dinnerDaddy', [
     })
     .when( '/showmatch/:id', {
       templateUrl: 'app/showmatch/showmatch.html',
-      controller: 'ShowmatchController',
+      // controller: 'LocationController',
       authenticate: true
     })
     .when('/location', {
       templateUrl: 'app/location/location.html',
-      controller: 'locationController',
+      controller: 'LocationController',
       authenticate: true
     })
     .otherwise({
