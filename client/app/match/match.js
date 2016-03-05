@@ -44,18 +44,17 @@ angular.module( 'dinnerDaddy.match', ['dinnerDaddy.services'] )
 
   // Check if there is a current user on rootScope, if not get new user.
   // This is needed when the page is refreshed so we don't lose $rootScope.user.username
-  if ($rootScope.user === undefined) {
+  if (!$rootScope.user) {
     Auth.getUser($cookies.get('fbId'))
     .then(function(data) {
       $rootScope.user = data.user;
-      $rootScope.user.username = data.user.username;
     });
   } 
 
   $scope.yes = function() {
     Match.sendVote($rootScope.currentSession.sessionName, $rootScope.user.username, currRestaurantIndex, true, $rootScope.currentSession.id)
     .then(function () {
-      Match.checkMatch($scope.currentSession.id, currRestaurantIndex)
+      Match.checkMatch($rootScope.currentSession.id, currRestaurantIndex)
         .then(function (matched) {
           if (matched) {
             Socket.emit('foundMatch', { restaurant: currRestaurantIndex, sessionId: $rootScope.currentSession.id, matched: $scope.currRestaurant});
