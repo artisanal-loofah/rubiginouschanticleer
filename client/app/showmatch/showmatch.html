@@ -1,7 +1,7 @@
 <!-- This is the page which shows the dinnerDaddy -->
 <!-- The user should see the movie on which the group matched on -->
 <!-- for now only optimized for mobile -->
-<div id="showmatch" class="container">
+<div id="showmatch" class="container" ng-controller="ShowmatchController">
   <div class="header center row">
     <h1 class="col-xs-12">
       <div class="app-title large">Matched!</div>
@@ -23,7 +23,7 @@
       </div>
     </div>
   </div>
-  <div class="locations">
-    <ng:include src="'app/location/location.html'"></ng:include>
-  </div>
+</div>
+<div class="locations">
+  <ng:include src="'app/location/location.html'"></ng:include>
 </div>
