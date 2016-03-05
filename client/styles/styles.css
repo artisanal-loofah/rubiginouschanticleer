@@ -47,6 +47,7 @@ button:disabled {
   font-weight: bold;
   font-size: 120px;
   color: crimson;
+  opacity: 0.8;
 }
 
 .subtitle {
