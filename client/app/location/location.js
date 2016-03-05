@@ -144,8 +144,8 @@ angular.module('dinnerDaddy.location', [])
       console.error('User rejected location access');
     }
   };
-
-  setInterval(verify(username), 1000);
+  //setInterval should keep getting user geodata every second
+  //setInterval(verify(username), 1000);
   verify();
 })
 
