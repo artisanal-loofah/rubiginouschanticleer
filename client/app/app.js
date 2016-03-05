@@ -34,6 +34,11 @@ var app = angular.module( 'dinnerDaddy', [
       controller: 'MatchController',
       authenticate: true
     })
+    .when( '/waiting', {
+      templateUrl: 'app/match/waiting.html',
+      controller: 'MatchController',
+      authenticate: true
+    })
     .when( '/sessions', {
       templateUrl: 'app/sessions/joinsessions.html',
       controller: 'SessionsController',
