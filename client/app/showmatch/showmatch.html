@@ -2,11 +2,6 @@
 <!-- The user should see the movie on which the group matched on -->
 <!-- for now only optimized for mobile -->
 <div id="showmatch" class="container" ng-controller="ShowmatchController">
-  <div class="header center row">
-    <h1 class="col-xs-12">
-      <div class="app-title large">Matched!</div>
-    </h1>
-  </div>
   <p class="center"><span class="bold">{{ user.username }}</span>, you and your friends have decided on a restaurant!</p>
   <div class="match">
     <h2 class="center">YOU ARE EATING AT: {{ matched.name }}</h2>
@@ -24,6 +19,7 @@
     </div>
   </div>
 </div>
+<br><br>
 <div class="locations">
   <ng:include src="'app/location/location.html'"></ng:include>
 </div>
