@@ -1,6 +1,6 @@
 angular.module('dinnerDaddy.location', [])
 
-.controller('locationController', function ($scope, $location, $cookies, LocationFactory) {
+.controller('locationController', function ($scope, $rootScope, $location, $cookies, $window, LocationFactory, Socket) {
   var username = $cookies.get('name');
   var origin = [];
   var map = new google.maps.Map(document.getElementById('mapcontainer'), {
@@ -43,6 +43,8 @@ angular.module('dinnerDaddy.location', [])
       ],
     selectedOption: {id: 'driving', name: 'DRIVING'} //This sets the default value of the select in the ui
   };
+
+  $scope.groupList = [];
 
   $scope.updateMode = function () {
     $scope.transport = google.maps.TravelMode[$scope.data.selectedOption.name];
@@ -102,6 +104,17 @@ angular.module('dinnerDaddy.location', [])
       icon: '../../assets/burger.png'
     });
 
+    /* ===== SETUP SOCKET USER LOCATIONS ==== */
+    var sessionId = $window.localStorage.getItem('sessionId');
+
+    Socket.emit('userlocation', {'userLocation' : coords, 'sessionId': sessionId, 'username': $cookies.get('name')});
+    Socket.on('userData', function (allInfo) {
+      console.log('all coordinates: ', allInfo);
+      $scope.groupList.push(allInfo);
+    });
+
+    console.log($scope.groupList)
+
     //Event listeners for marker info
     google.maps.event.addListener(user, 'click', (function (user) {
       return function () {
@@ -131,7 +144,8 @@ angular.module('dinnerDaddy.location', [])
       console.error('User rejected location access');
     }
   };
-
+  //setInterval should keep getting user geodata every second
+  //setInterval(verify(username), 1000);
   verify();
 })
 

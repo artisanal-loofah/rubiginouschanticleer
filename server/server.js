@@ -96,6 +96,11 @@ io.on( 'connect' , function( socket ){
     io.to(data.sessionId).emit('matchRedirect', data.restaurant);
     io.to(data.sessionId).emit('setMatched', data.matched);
   });
+
+  socket.on('userlocation', function (data) {
+    //TODO build out isolated coordinates to session ONLY
+    io.to(data.sessionId).emit('userData', data);
+  })
 });
 
 const PORT = 8000;
