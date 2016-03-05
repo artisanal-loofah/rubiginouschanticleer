@@ -1,5 +1,4 @@
 var distance = require('google-distance-matrix');
-var googlekeys = require('../config/googleconfig.js');
 
 distance.key(process.env.DISTANCE_MATRIX_KEY);
 distance.units('imperial');
