@@ -28,6 +28,7 @@ angular.module('dinnerDaddy.sessions', [])
   Auth.getUser($cookies.get('fbId'))
   .then(function(data) {
     $window.localStorage.setItem('com.dinnerDaddy', data.token);
+    $window.localStorage.setItem('user', data.user.username);
     $rootScope.user = data.user;
     fetchSessions();
     getFriends(data.user.id);
@@ -121,8 +122,8 @@ angular.module('dinnerDaddy.sessions', [])
       $window.localStorage.setItem('sessionId', sessionId);
     }; 
 
-    var getSession = function(session) {
-      return $http.get('/api/sessions/' + session.id)
+    var getSession = function(sessionId) {
+      return $http.get('/api/sessions/' + sessionId)
       .then(function(res) {
         return res.data;
       })

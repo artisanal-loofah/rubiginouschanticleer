@@ -4,20 +4,22 @@
 <div id="showmatch" class="container">
   <div class="header center row">
     <h1 class="col-xs-12">
-      <div class="app-title large">It's a Match!</div>
+      <div class="app-title large">Matched!</div>
     </h1>
   </div>
-  <p class="center"><span class="bold">{{ user.name }}</span>, you have a dinnerDaddy!</p>
+  <p class="center"><span class="bold">{{ user.username }}</span>, you and your friends have decided on a restaurant!</p>
   <div class="movie">
-    <h2 class="center">{{ currMovie.title }} ({{ currMovie.release_date | date:"yyyy" }})</h2>
-    <h6 class="center">Avg Rating: {{ currMovie.vote_average }} | ({{ currMovie.original_language }})</h6>
-    <div class="row">
+    <h2 class="center">YOU ARE EATING AT: {{ matched.name }}</h2>
+     <div class="row">
       <!-- We want to size the poster appropriately so we can
       see the buttons at the bottom -->
-      <img class="poster col-xs-6" alt="{{ currMovie.title }} poster" src="{{imgPath}}{{ currMovie.poster_path }}">
+      <img class="poster col-xs-6" src="{{ currRestaurantImageHD }}">
       <div class="summary col-xs-6">
-        <h4>Movie Summary</h4>
-        <p>{{ currMovie.overview }}</p>
+        <img src="{{ matched.rating_img_url }}"> {{matched.review_count}} reviews
+      </div>
+      <div class="summary col-xs-6">
+        <p>{{ matched.snippet_text }}</p>
+        <a href="{{matched.url}}">More info</a>
       </div>
     </div>
   </div>

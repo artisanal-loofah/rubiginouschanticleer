@@ -17,5 +17,22 @@ UserSession.sync();
 Session.sync();
 User.sync();
 
+Session.getUserSession = function (sessionId, userId) {
+  return UserSession.findOne({ where: {session_id: sessionId, user_id: userId }})
+    .catch(function (err) {
+      console.log('Error in UserSessions get: ', err);
+    });
+}
+
+Session.countUsersInSession = function(sessionId) {
+  return UserSession.count({ where: {session_id: sessionId} })
+    .then(function (result) {
+      console.log('Count of users in session: ' + sessionId + ' is ' + result);
+      return result;
+    })
+    .catch(function (err) {
+      console.error("Error getting count in UserSession: ", err);
+    });
+}
 
 module.exports = Session;

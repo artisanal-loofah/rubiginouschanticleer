@@ -11,7 +11,6 @@ angular.module( 'dinnerDaddy.auth', [] )
     }, 2000 );
   }
 
-
   $scope.signout = function () {
     Auth.signout();
     // might have to reload page as well, not sure yet
@@ -46,6 +45,9 @@ angular.module( 'dinnerDaddy.auth', [] )
 
     //clear localStorage
     $window.localStorage.removeItem('com.dinnerDaddy');
+    $window.localStorage.removeItem('sessionId');
+    $window.localStorage.removeItem('matched');
+    $window.localStorage.removeItem('user');
   };
 
   return {

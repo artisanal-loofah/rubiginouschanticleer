@@ -15,7 +15,7 @@ They will press start when everyone has joined -->
     <hr>
   </div>
 
-  <div class="users" ng-repeat="user in users">
+  <div class="users" ng-repeat="user in users track by $index">
     <ul>
       <li>{{ user.username }}</li>
     </ul>
