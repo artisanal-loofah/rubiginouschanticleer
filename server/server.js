@@ -97,12 +97,9 @@ io.on( 'connect' , function( socket ){
     io.to(data.sessionId).emit('setMatched', data.matched);
   });
 
-  socket.on('userlocation', function (userLocation) {
+  socket.on('userlocation', function (data) {
     //TODO build out isolated coordinates to session ONLY
-    //io.to()
-
-    //temp
-    io.emit('userCoords', userLocation);
+    io.to(data.sessionId).emit('userData', data);
   })
 });
 
