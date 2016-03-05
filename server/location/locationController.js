@@ -13,6 +13,8 @@ module.exports = {
     var arrRestaurant = [request.body.restaurant];
 
     distance.matrix(arrOrigin, arrRestaurant, function (error, distances) {
+      //expect distances to be object response from distance node module matrix call
+      //contains distance and duration from origin to destination
       if (error) {
         console.error(error);
       };
@@ -20,6 +22,7 @@ module.exports = {
         console.error('no distances were found');
       };
       if (distances.status === 'OK') {
+        //this is in preparation for multiple user origins
         for (var i=0; i < arrOrigin.length; i++) {
           if (distances.rows[0].elements[0].status === 'OK') { 
             var distanceInfo = {
