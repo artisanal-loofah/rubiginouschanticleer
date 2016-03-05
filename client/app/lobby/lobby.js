@@ -6,7 +6,6 @@ angular.module( 'dinnerDaddy.lobby', [] )
   $rootScope.restaurants;
   Lobby.getUsersInOneSession($rootScope.currentSession.id)
   .then(function (users){
-    console.log(users, 'this is users in get users');
     $scope.users = users;   
   });
 
