@@ -22,6 +22,7 @@ angular.module('dinnerDaddy.location', [])
 
   /* --- Test data ---- !!!!
    PROVIDE RESTAURANT INFO LIKE THIS !!! */
+   //will not accept location without coordinates
   var restaurant = {
     name: 'Golden Boy Pizza',
     location: [37.79983540000001, -122.4080836]
