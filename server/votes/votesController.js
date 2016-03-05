@@ -1,20 +1,16 @@
 var helpers = require( '../config/helpers' );
 var Vote = require( './votes' );
 var Session_User = require( '../sessions_users/sessions_users' );
-var mController = require( '../movies/moviesController' );
 var Session = require( '../sessions/sessions' );
 var User = require( '../users/users' );
 
 var getAllVotes = function() {};
 
 var addVote = function(req, res) {
-  console.log('>>>>>>>>>>in the addVote server side function...', req.body);
 
   var addVote = function(session_user, restaurantId, vote, sessionId) {
-    Vote.addVote(session_user, restaurantId, vote, sessionId) // add vote to db
+    Vote.addVote(session_user, restaurantId, vote, sessionId)
     .then(function (data) {
-      // add vote to database
-      // return 201 created
       res.status( 201 );
       res.json( data );
       }, function( err ) {
@@ -22,16 +18,12 @@ var addVote = function(req, res) {
       });
   };
 
-  var session_user = parseInt( req.body.sessionName );
+  var session_user;
   var restaurantId = parseInt( req.body.restaurantId );
   var vote = req.body.vote;
-  var sessionId = req.body.sessionId;
-  // var user = parseInt( req.body.user_id );
-  // var session = parseInt( req.body.session_id );
   User.findOne({where: {username: req.body.username}})
     .then(function (user) {
       var user = user.dataValues.id;
-      console.log('user found: ', user);
       Session.findOne({where: {sessionName: req.body.sessionName}})
       .then(function (session) {
         var session = session.dataValues.id;
@@ -48,7 +40,7 @@ var addVote = function(req, res) {
                 res.send();
                 return;
               } else {
-                addVote(session_user, restaurantId, vote, sessionId);
+                addVote(session_user, restaurantId, vote, sessionUser.dataValues.session_id);
               }
             });
           } else {
@@ -56,7 +48,7 @@ var addVote = function(req, res) {
             return;
           }
         } else {
-          addVote(session_user, restaurantId, vote, sessionId);
+          addVote(session_user, restaurantId, vote, sessionUser.dataValues.session_id);
         };
     });
   });
@@ -79,7 +71,6 @@ var getSessionVotes = function (req, res, next) {
 };
 
 var checkMatch = function(req, res, next) {
-
   var sessionId = req.params.session_id;
   var restaurantId = req.params.restaurantId;
 
@@ -96,20 +87,20 @@ var checkMatch = function(req, res, next) {
             return memo;
           }, true);
           if(matched) {
-            mController.getMovie(req, res); // pass response object to mController so it can res.send movie data
             Vote.deleteVotes(sessionId);
+            res.json(true);
           } else {
-            res.json( false );
+            res.json(false);
           }
         } else {
-          res.json( false );
+          res.json(false);
         }
       } else {
-        res.json( false );
+        res.json(false);
       }
     });
   });  
-}
+};
 
 module.exports = {
 

@@ -2,9 +2,6 @@ angular.module( 'dinnerDaddy.match', ['dinnerDaddy.services'] )
 
 .controller( 'MatchController', function( $scope, $rootScope, Match, Auth, Session, Socket, Restaurant, $cookies, $window) {
   $scope.session = {};
-  $scope.user = {};
-
-  $scope.user.name = $cookies.get('name');
 
   $scope.restaurants;
   $scope.currRestaurant;
@@ -34,6 +31,7 @@ angular.module( 'dinnerDaddy.match', ['dinnerDaddy.services'] )
   };
 
   // Check if there is a currentSession on rootScope, if not create a new session
+  // This is needed when the page is refreshed so we don't lose $rootScope.currentSession
   if (!$rootScope.currentSession) {
     Session.getSession($window.localStorage.getItem('sessionId'))
     .then(function (session) {
@@ -44,13 +42,23 @@ angular.module( 'dinnerDaddy.match', ['dinnerDaddy.services'] )
     $scope.init();
   }
 
+  // Check if there is a current user on rootScope, if not get new user.
+  // This is needed when the page is refreshed so we don't lose $rootScope.user.username
+  if ($rootScope.user === undefined) {
+    Auth.getUser($cookies.get('fbId'))
+    .then(function(data) {
+      $rootScope.user = data.user;
+      $rootScope.user.username = data.user.username;
+    });
+  } 
+
   $scope.yes = function() {
-    Match.sendVote($rootScope.currentSession.sessionName, $scope.user.name, currRestaurantIndex, true, $rootScope.currentSession.id)
+    Match.sendVote($rootScope.currentSession.sessionName, $rootScope.user.username, currRestaurantIndex, true, $rootScope.currentSession.id)
     .then(function () {
       Match.checkMatch($scope.currentSession.id, currRestaurantIndex)
-        .then(function (result) {
-          if (result !== false) {
-            Socket.emit('foundMatch', {sessionName: $rootScope.currentSession.sessionName, restaurant: currRestaurantIndex, sessionId: $rootScope.currentSession.id, matched: $scope.currRestaurant});
+        .then(function (matched) {
+          if (matched) {
+            Socket.emit('foundMatch', { restaurant: currRestaurantIndex, sessionId: $rootScope.currentSession.id, matched: $scope.currRestaurant});
             $rootScope.matched = $scope.currRestaurant;
             $window.localStorage.setItem('matched', JSON.stringify($rootScope.matched));
           } else {
@@ -61,13 +69,13 @@ angular.module( 'dinnerDaddy.match', ['dinnerDaddy.services'] )
   }
 
   $scope.no = function() {
-    Match.sendVote($rootScope.currentSession.sessionName, $scope.user.name, currRestaurantIndex, false, $rootScope.currentSession.id);
+    Match.sendVote($rootScope.currentSession.sessionName, $rootScope.user.username, currRestaurantIndex, false, $rootScope.currentSession.id);
     loadNextRestaurant();
   }
 
   // Listen for the signal to redirect to a 'match found' page.
   Socket.on('matchRedirect', function (id) {
-    // id refers to the id of the movie that the group matched on
+    // id refers to the id of the restaurant that the group matched on
     Match.matchRedirect(id);
   });
 
@@ -100,9 +108,9 @@ angular.module( 'dinnerDaddy.match', ['dinnerDaddy.services'] )
       $location.path('/showmatch/' + id);
     },
 
-    checkMatch: function(session, restaurant) {
+    checkMatch: function(sessionId, restaurantId) {
       return $http.get(
-        '/api/sessions/' + session + '/match/' + restaurant
+        '/api/sessions/' + sessionId + '/match/' + restaurantId
       )
       .then(function (response) {
         return response.data;

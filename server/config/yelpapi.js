@@ -4,7 +4,6 @@ var request = require('request');
 var qs = require('querystring');  
 var _ = require('lodash');
 
-
 var yelp_request = function(userParameters, callback){
   var httpMethod = 'GET';
   var yelpApiUrl = 'http://api.yelp.com/v2/search';

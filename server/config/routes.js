@@ -1,7 +1,6 @@
 // require controllers here
 var usersController = require('../users/usersController.js');
 var genresController = require('../genres/genresController.js');
-var moviesController = require('../movies/moviesController.js');
 var prefsController = require('../prefs/prefsController.js');
 var sessionsController = require('../sessions/sessionsController.js');
 var votesController = require('../votes/votesController.js');
@@ -47,7 +46,6 @@ module.exports = function ( app, express ) {
 
   /* MOVIES */
   app.use('/api/movies', helpers.decode);
-  app.get('/api/movies/:movie_id', moviesController.getMovie );
 
   /* PREFS */
   app.use('/api/prefs', helpers.decode);
@@ -63,7 +61,7 @@ module.exports = function ( app, express ) {
   /* VOTES */
   app.use('/api/votes', helpers.decode);
   app.get('/api/votes', votesController.getAllVotes );
-  app.get('/api/votes/:session_id/:movie_id', votesController.getSessionVotes ); // get votes for a particular session and movie
+  app.get('/api/votes/:session_id/:restaurantId', votesController.getSessionVotes ); // get votes for a particular session and movie
   app.post('/api/votes', votesController.addVote );
 
   /* SESSIONS_USERS */

@@ -47,6 +47,7 @@ angular.module( 'dinnerDaddy.auth', [] )
     $window.localStorage.removeItem('com.dinnerDaddy');
     $window.localStorage.removeItem('sessionId');
     $window.localStorage.removeItem('matched');
+    $window.localStorage.removeItem('user');
   };
 
   return {

@@ -29,8 +29,8 @@ Vote.sync().then( function() {
   console.error( err );
 });
 
-Vote.addVote = function (sessionUser, restaurantId, vote, sessionId) {
-  return Vote.create({ session_user_id: sessionUser, restaurantId: restaurantId, vote: vote, sessionId: sessionId })
+Vote.addVote = function (sessionUserId, restaurantId, vote, sessionId) {
+  return Vote.create({ session_user_id: sessionUserId, restaurantId: restaurantId, vote: vote, sessionId: sessionId })
     .catch(function (err) {
       console.error(err.stack);
     });

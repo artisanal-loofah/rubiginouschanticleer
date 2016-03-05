@@ -28,6 +28,7 @@ angular.module('dinnerDaddy.sessions', [])
   Auth.getUser($cookies.get('fbId'))
   .then(function(data) {
     $window.localStorage.setItem('com.dinnerDaddy', data.token);
+    $window.localStorage.setItem('user', data.user.username);
     $rootScope.user = data.user;
     fetchSessions();
     getFriends(data.user.id);
@@ -39,28 +40,6 @@ angular.module('dinnerDaddy.sessions', [])
   Socket.on('newSession', function(data) {
     $scope.sessions.push(data);
   });
-
-  var getFriends = function(userId) {
-    Session.getFriends(userId)
-    .then(function(friends) {
-      $scope.friends = friends;
-    });
-  };
-
-  $scope.fetchSessions = function() {
-    Session.fetchSessions()
-    .then(function(sessions) {
-      console.log('fetched sessions, is there: ', $rootScope);
-      $scope.sessions = sessions;
-    })
-    .catch(function(err) {
-      console.error(err);
-    });
-  };
-
-  $scope.fetchSessions();
-
-  $scope.setSession = Session.setSession;
 
   $scope.createSession = function() {
     Session.createSession($scope.sessionName, $scope.sessionLocation)
