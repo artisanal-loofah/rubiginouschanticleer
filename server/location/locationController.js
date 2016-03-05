@@ -17,7 +17,7 @@ module.exports = {
         console.error(error);
       };
       if (!distances) {
-        console.error('no distances');
+        console.error('no distances were found');
       };
       if (distances.status === 'OK') {
         for (var i=0; i < arrOrigin.length; i++) {
