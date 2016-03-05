@@ -13,7 +13,6 @@ angular.module( 'dinnerDaddy.lobby', [] )
     Restaurant.getRestaurants($rootScope.currentSession.sessionLocation)
     .then(function(data){
       var shuffledRestaurants = _.shuffle(data);
-      console.log(shuffledRestaurants, 'start session here shuffled');
       Socket.emit('startSession', {sessionId: sessionId, restaurants: shuffledRestaurants});
     });
   };
