@@ -1,12 +1,26 @@
-angular.module('dinnerDaddy.location', [])
+angular.module('dinnerDaddy.location', ['dinnerDaddy.showmatch'])
 
-.controller('locationController', function ($scope, $rootScope, $location, $cookies, $window, LocationFactory, Socket) {
-  var username = $cookies.get('name');
+.controller('LocationController', function ($scope, $rootScope, $location, $cookies, $window, $routeParams, Auth, LocationFactory, Socket) {
+  if (!$rootScope.matched) {
+    $rootScope.matched = JSON.parse($window.localStorage.getItem('matched'));
+    var currentImageURL = $rootScope.matched.image_url;
+    $rootScope.currRestaurantImageHD = currentImageURL.slice(0,currentImageURL.length-6) + 'l.jpg';
+  }
+
+  if (!$rootScope.user) {
+    Auth.getUser($cookies.get('fbId'))
+    .then(function(data) {
+      $rootScope.user = data.user;
+    });
+  }
+
+  var id = parseInt( $routeParams.id );
+
   var origin = [];
   var map = new google.maps.Map(document.getElementById('mapcontainer'), {
     center: {
-      lat: 37.75,
-      lng: -122.4
+      lat: $rootScope.matched.location.coordinate.latitude,
+      lng: $rootScope.matched.location.coordinate.longitude
     },
     scrollwheel: false,
     mapTypeId: google.maps.MapTypeId.ROADMAP,
@@ -20,20 +34,18 @@ angular.module('dinnerDaddy.location', [])
   var directionRenderer = new google.maps.DirectionsRenderer({preserveViewport: true, suppressMarkers: true});
   directionRenderer.setMap(map);
 
-  /* --- Test data ---- !!!!
-   PROVIDE RESTAURANT INFO LIKE THIS !!! */
-   //will not accept location without coordinates
   var restaurant = {
-    name: 'Golden Boy Pizza',
-    location: [37.78313989999999, -122.44344610000002]
+    name: $rootScope.matched.name,
+    location: [
+      $rootScope.matched.location.coordinate.latitude,
+      $rootScope.matched.location.coordinate.longitude
+    ]
   };
-  /* ---- END ---- */
 
   $scope.origin;
   $scope.destination;
   $scope.restaurantName = restaurant.name;
   $scope.restaurantLocation = restaurant.location;
-  $scope.username = $cookies.get('name');
   $scope.transport = google.maps.TravelMode.DRIVING;
 
   $scope.data = {
@@ -92,7 +104,7 @@ angular.module('dinnerDaddy.location', [])
     //setting up options for new google Maps Marker
     var user = new google.maps.Marker({
       position: coords,
-      title: $scope.username,
+      title: $rootScope.user.username,
       map: map,
       icon: '../../assets/guy.png'
     });
@@ -109,16 +121,13 @@ angular.module('dinnerDaddy.location', [])
 
     Socket.emit('userlocation', {'userLocation' : coords, 'sessionId': sessionId, 'username': $cookies.get('name')});
     Socket.on('userData', function (allInfo) {
-      console.log('all coordinates: ', allInfo);
       $scope.groupList.push(allInfo);
     });
-
-    console.log($scope.groupList)
 
     //Event listeners for marker info
     google.maps.event.addListener(user, 'click', (function (user) {
       return function () {
-        info.setContent($scope.username);
+        info.setContent($rootScope.user.username);
         info.open(map, user);
       }
     })(user));

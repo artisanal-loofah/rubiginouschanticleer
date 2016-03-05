@@ -21,10 +21,6 @@ var app = angular.module( 'dinnerDaddy', [
       templateUrl: 'app/auth/signin.html',
       controller: 'AuthController'
     })
-    .when( '/signup', {
-      templateUrl: 'app/auth/signup.html',
-      controller: 'AuthController'
-    })
     .when( '/signout', {
       templateUrl: 'app/auth/signout.html',
       controller: 'AuthController'
@@ -51,12 +47,6 @@ var app = angular.module( 'dinnerDaddy', [
     })
     .when( '/showmatch/:id', {
       templateUrl: 'app/showmatch/showmatch.html',
-      controller: 'ShowmatchController',
-      authenticate: true
-    })
-    .when('/location', {
-      templateUrl: 'app/location/location.html',
-      controller: 'locationController',
       authenticate: true
     })
     .otherwise({
