@@ -2,6 +2,14 @@ button:disabled {
   color: lightgrey;
 }
 
+.navtitle {
+  font-family: 'Montserrat', serif;
+  font-weight: bold;
+  color: white;
+  font-size: 26px;
+  padding: 5px;
+}
+
 .titleinfo {
   text-align: center;
   font-size: 30px;
@@ -324,6 +332,14 @@ hr {
   .loginbtn img {
     width: 200px;
     length: 200px;
+  }
+
+  .navtitle {
+    font-family: 'Montserrat', serif;
+    font-weight: bold;
+    color: white;
+    font-size: 26px;
+    padding: 5px;
   }
 }
 
