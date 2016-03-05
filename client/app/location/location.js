@@ -25,7 +25,7 @@ angular.module('dinnerDaddy.location', [])
    //will not accept location without coordinates
   var restaurant = {
     name: 'Golden Boy Pizza',
-    location: [37.79983540000001, -122.4080836]
+    location: [37.78313989999999, -122.44344610000002]
   };
   /* ---- END ---- */
 
@@ -92,14 +92,14 @@ angular.module('dinnerDaddy.location', [])
       position: coords,
       title: $scope.username,
       map: map,
-      icon: './assets/guy.png'
+      icon: '../../assets/guy.png'
     });
 
     var restaurant = new google.maps.Marker({
       position: restaurantCoords,
       title: $scope.restaurantName,
       map: map,
-      icon: './assets/burger.png'
+      icon: '../../assets/burger.png'
     });
 
     //Event listeners for marker info
