@@ -6,7 +6,7 @@ angular.module( 'dinnerDaddy.lobby', [] )
   $rootScope.restaurants;
   Lobby.getUsersInOneSession($rootScope.currentSession.id)
   .then(function (users){
-    $scope.users = users;    
+    $scope.users = users;   
   });
 
   $scope.startSession = function (sessionId) {
@@ -19,7 +19,13 @@ angular.module( 'dinnerDaddy.lobby', [] )
 
   // Listening for newUser event and updates users 
   Socket.on('newUser', function (data) {
-    $scope.users.push(data);
+    var stringifiedUsers = _.map(users, function(object) {
+      return JSON.stringify(object);
+    }); 
+    
+    if (_.indexOf(stringifiedUsers, JSON.stringify(data)) !== -1){
+      $scope.users.push(data);
+    }
   });
 
   // Listening for started session, relocates to /match path
