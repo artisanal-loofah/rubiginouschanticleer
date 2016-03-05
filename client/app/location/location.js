@@ -78,8 +78,10 @@ angular.module('dinnerDaddy.location', [])
   var success = function (position, username) {
     //gathering coordinates from user geolocation
     var coords = new google.maps.LatLng(position.coords.latitude, position.coords.longitude)
+    //this pushes to the var origin array in the controller scope
     origin.push([position.coords.latitude, position.coords.longitude].join(','))
 
+    //$scope origin is 'coords', which is a google function to gather marker data, does not accept arrays
     $scope.origin = coords;
 
     var restaurantCoords = new google.maps.LatLng($scope.restaurantLocation[0], $scope.restaurantLocation[1]);
