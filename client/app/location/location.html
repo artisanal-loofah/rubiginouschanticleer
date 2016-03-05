@@ -4,12 +4,17 @@
 <div class="welcomeinfo"> Click on markers for more info </div>
 
 <div class="fullmap">
-  <div id="mapcontainer"></div>  
-  <div id="controls">
-    <select id="mode" onChange="updateMode()">
-      <option value="driving">Driving</option>
-      <option value="bus">Bus</option>
-      <option value="walking" selected="selected">Walking</option>
-    </select>
+  <div id="mapcontainer"></div>
+    <div id="controls">
+    <form name="modeForm">
+      <label for="modeSelect">Transportation:</label>
+      <select name="modeSelect" id="modeSelect"
+        ng-options="option.name for option in data.availableOptions track by option.id"
+        ng-model="data.selectedOption" ng-change="updateMode()"></select>
+    </form>
   </div>
+</div>
+
+<div class="display">
+  Distance from {{ username }} to {{ restaurantName }} is {{ distance }} OR {{ duration }}
 </div>

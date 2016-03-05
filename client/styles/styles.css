@@ -32,7 +32,10 @@ button:disabled {
   padding: 0px 15px 0px 0px;
   border-width: 2px;
   border-color: #ff7f7f;
+}
 
+.display {
+  text-align: center;
 }
 
 .bold {
