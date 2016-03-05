@@ -5,12 +5,12 @@ angular.module( 'dinnerDaddy.lobby', [] )
   $rootScope.currentSession;
     
   Lobby.getUsersInOneSession($rootScope.currentSession.id)
-  .then(function(users){
+  .then(function (users){
     $scope.users = users;    
   });
 
-  $scope.startSession = function( sessionId ) {
-    Socket.emit('startSession', { sessionId: sessionId });
+  $scope.startSession = function (sessionId) {
+    Socket.emit('startSession', {sessionId: sessionId});
   };
 
   // Listening for newUser event and updates users 
@@ -22,11 +22,11 @@ angular.module( 'dinnerDaddy.lobby', [] )
   Socket.on('sessionStarted', function () {
     $location.path('/match');
   });
-  
+
 })
-.factory('Lobby', function($http) {
+.factory('Lobby', function ($http) {
   return {
-    getUsersInOneSession: function(sessionId) {
+    getUsersInOneSession: function (sessionId) {
       return $http({
         method:'GET',
         url: '/api/sessions/'+ sessionId + '/users/',

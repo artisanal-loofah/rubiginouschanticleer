@@ -10,7 +10,7 @@ var Vote = db.define('votes', {
     type: Sequelize.INTEGER,
     unique: 'su_movie_idx'
   },
-  movie_id: {
+  restaurantId: {
     type: Sequelize.INTEGER,
     unique: 'su_movie_idx'
   },
@@ -24,13 +24,13 @@ var Vote = db.define('votes', {
 
 Vote.sync().then( function() {
   console.log( "votes table created" );
-} )
+})
 .catch( function( err ) {
   console.error( err );
-} );
+});
 
-Vote.addVote = function (sessionUser, movie, vote, sessionId) {
-  return Vote.create({ session_user_id: sessionUser, movie_id: movie, vote: vote, sessionId: sessionId })
+Vote.addVote = function (sessionUser, restaurantId, vote, sessionId) {
+  return Vote.create({ session_user_id: sessionUser, restaurantId: restaurantId, vote: vote, sessionId: sessionId })
     .catch(function (err) {
       console.error(err.stack);
     });
@@ -41,20 +41,14 @@ Vote.deleteVotes = function (sessionId) {
     .catch(function (err) {
       console.error("Error destroying votes: ", err);
     });
-}
+};
 
-Vote.getSessMovieVotes = function (sessionId, movieId) {
-  // expect this function to return a promise
-  // Should query the database and resolve as an array of
-  // objects where each object represents a row
-  // for the particular session and movie
-  // The Votes table has a session_user_id not a session_id, so we have to do an inner join...
-  console.log("Getting the session movie votes....");
-  return Vote.findAll({ where: { movie_id: movieId }})
+Vote.getSessionVotes = function (sessionId, restaurantId) {
+  return Vote.findAll({ where: { restaurantId: restaurantId }})
   .catch( function( err ) {
     console.error( err.stack );
   });
-}
+};
 
 
 module.exports = Vote;

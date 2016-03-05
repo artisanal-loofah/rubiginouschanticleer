@@ -52,6 +52,7 @@ angular.module( 'dinnerDaddy.match', ['dinnerDaddy.services'] )
           if (result !== false) {
             Socket.emit('foundMatch', {sessionName: $rootScope.currentSession.sessionName, restaurant: currRestaurantIndex, sessionId: $rootScope.currentSession.id, matched: $scope.currRestaurant});
             $rootScope.matched = $scope.currRestaurant;
+            $window.localStorage.setItem('matched', JSON.stringify($rootScope.matched));
           } else {
             loadNextRestaurant(); 
           }
@@ -70,20 +71,23 @@ angular.module( 'dinnerDaddy.match', ['dinnerDaddy.services'] )
     Match.matchRedirect(id);
   });
 
-  Socket.on('info', function (data) {
-    // id refers to the id of the movie that the group matched on
+  // Listen for the signal to reset matched on rootScope
+  Socket.on('setMatched', function (data) {
+    // Set matched on rootScope to matched restaurant
     $rootScope.matched = data;
+    // Set the image url from small to large
     var currentImageURL = data.image_url;
     $rootScope.currRestaurantImageHD = currentImageURL.slice(0,currentImageURL.length-6) + 'l.jpg'; 
-    console.log('data from socket: ', data);
+    $window.localStorage.setItem('matched', JSON.stringify($rootScope.matched));
   });
 })
+
 .factory('Match', function ($http, $location) {
   return {
-    sendVote: function (sessionName, username, movieID, vote, sessionId) {
+    sendVote: function (sessionName, username, restaurantId, vote, sessionId) {
       return $http.post(
         '/api/votes',
-        { sessionName: sessionName, username: username, movie_id: movieID, vote: vote, sessionId: sessionId })
+        { sessionName: sessionName, username: username, restaurantId: restaurantId, vote: vote, sessionId: sessionId })
       .then(function (response) {
         return response;
       },
@@ -96,9 +100,9 @@ angular.module( 'dinnerDaddy.match', ['dinnerDaddy.services'] )
       $location.path('/showmatch/' + id);
     },
 
-    checkMatch: function(session, movie) {
+    checkMatch: function(session, restaurant) {
       return $http.get(
-        '/api/sessions/' + session + '/match/' + movie
+        '/api/sessions/' + session + '/match/' + restaurant
       )
       .then(function (response) {
         return response.data;

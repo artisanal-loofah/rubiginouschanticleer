@@ -12,14 +12,7 @@ var Strategy = require('passport-facebook').Strategy;
 
 var helpers = require('./helpers.js'); // our custom middleware
 
-
 module.exports = function ( app, express ) {
-  /* USERS */
-  // app.get('/api/users', usersController.getAllUsers );
-  // app.get('/api/users/:user', usersController.validate );
-  // app.post('/api/users/signin', usersController.signin );
-  // app.post('/api/users/signup', usersController.signup );
-  // app.post('/api/users/signout', usersController.signout );
 
   /*FACEBOOK LOGIN */
   app.get('/login/facebook', 
@@ -54,8 +47,6 @@ module.exports = function ( app, express ) {
 
   /* MOVIES */
   app.use('/api/movies', helpers.decode);
-  app.get('/api/movies', moviesController.getAllMovies );
-  app.get('/api/movies/package/:number', moviesController.getMoviePackage );
   app.get('/api/movies/:movie_id', moviesController.getMovie );
 
   /* PREFS */
@@ -72,7 +63,7 @@ module.exports = function ( app, express ) {
   /* VOTES */
   app.use('/api/votes', helpers.decode);
   app.get('/api/votes', votesController.getAllVotes );
-  app.get('/api/votes/:session_id/:movie_id', votesController.getSessMovieVotes ); // get votes for a particular session and movie
+  app.get('/api/votes/:session_id/:movie_id', votesController.getSessionVotes ); // get votes for a particular session and movie
   app.post('/api/votes', votesController.addVote );
 
   /* SESSIONS_USERS */
@@ -83,10 +74,7 @@ module.exports = function ( app, express ) {
 
   /* MATCHING */
   // This endpoint answers the question, 'For session <id>, do we currently have a match on movie <id>?'
-  app.get('/api/sessions/:session_id/match/:movie_id', votesController.checkMatch );
-
-
-
+  app.get('/api/sessions/:session_id/match/:restaurantId', votesController.checkMatch );
 
   // If a request is sent somewhere other than the routes above,
   // send it through our custom error handler

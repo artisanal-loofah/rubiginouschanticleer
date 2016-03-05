@@ -89,12 +89,11 @@ io.on( 'connect' , function( socket ){
     io.to(data.sessionId).emit('sessionStarted');
   });
 
-  // This listener handles broadcasting a matched movie to connected clients.
+  // This listener handles broadcasting a matched restaurant to connected clients.
   socket.on('foundMatch', function(data) {
     socket.join(data.sessionId);
-    console.log('the data in foundMatch: ', data);
     io.to(data.sessionId).emit('matchRedirect', data.restaurant);
-    io.to(data.sessionId).emit('info', data.matched);
+    io.to(data.sessionId).emit('setMatched', data.matched);
   });
 });
 
