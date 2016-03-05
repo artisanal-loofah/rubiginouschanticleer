@@ -5,8 +5,8 @@ angular.module('dinnerDaddy.location', [])
   var origin = [];
   var map = new google.maps.Map(document.getElementById('mapcontainer'), {
     center: {
-      lat: 37.75,
-      lng: -122.4
+      lat: $rootScope.matched.location.coordinate.latitude,
+      lng: $rootScope.matched.location.coordinate.longitude
     },
     scrollwheel: false,
     mapTypeId: google.maps.MapTypeId.ROADMAP,
@@ -24,8 +24,8 @@ angular.module('dinnerDaddy.location', [])
    PROVIDE RESTAURANT INFO LIKE THIS !!! */
    //will not accept location without coordinates
   var restaurant = {
-    name: 'Golden Boy Pizza',
-    location: [37.78313989999999, -122.44344610000002]
+    name: $rootScope.matched.name,
+    location: [$rootScope.matched.location.coordinate.latitude, $rootScope.matched.location.coordinate.latitude]
   };
   /* ---- END ---- */
 
