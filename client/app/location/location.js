@@ -1,6 +1,6 @@
 angular.module('dinnerDaddy.location', [])
 
-.controller('locationController', function ($scope, $location, $cookies, LocationFactory) {
+.controller('locationController', function ($scope, $location, $cookies, LocationFactory, Socket) {
   var username = $cookies.get('name');
   var origin = [];
   var map = new google.maps.Map(document.getElementById('mapcontainer'), {
@@ -101,6 +101,12 @@ angular.module('dinnerDaddy.location', [])
       map: map,
       icon: '../../assets/burger.png'
     });
+
+    /* ===== SETUP SOCKET USER LOCATIONS ==== */
+    Socket.emit('userlocation', {'userlocation' : coords});
+    Socket.on('userCoords', function (allCoords) {
+      console.log('all coordinates: ', allCoords);
+    })
 
     //Event listeners for marker info
     google.maps.event.addListener(user, 'click', (function (user) {
