@@ -1,7 +1,8 @@
 var express = require('express');
 var db = require('./config/db');
 var app = express();
-
+// dotenv sets up the process.env variables. Put env variables in a .env file in your root
+require('dotenv').config({path:__dirname+'/../.env'});
 var http = require('http').Server(app);
 var io = require('socket.io')(http);
 var Session = require('./sessions/sessions');
@@ -9,11 +10,9 @@ var User = require('./users/users');
 
 var passport = require('passport');
 var Strategy = require('passport-facebook').Strategy;
-var fbconfig = require('./config/fbconfig');
 
 // Added for Yelp API
 var api = require('./config/yelpapi.js');
-var yelpkeys = require('./config/yelpkeys.js');
 
 app.get('/getRestaurants', function (req, res) {
   api(req.query, function (error, resp, body) {
@@ -26,9 +25,9 @@ app.get('/getRestaurants', function (req, res) {
 var usersController = require('./users/usersController');
 
 passport.use(new Strategy({
-    clientID: fbconfig.clientID,
-    clientSecret: fbconfig.clientSecret,
-    callbackURL: fbconfig.callbackURL,
+    clientID: process.env.FB_CLIENT_ID, 
+    clientSecret: process.env.FB_CLIENT_SECRET,
+    callbackURL: process.env.FB_CALLBACK_URL,
     profileFields: ['id', 'displayName', 'picture.height(150).width(150)','friends']
   },
   function(accessToken, refreshToken, profile, cb) {

@@ -3,18 +3,17 @@ var n = require('nonce')();
 var request = require('request');  
 var qs = require('querystring');  
 var _ = require('lodash');
-var yelpkeys = require('./yelpkeys.js');
 
 
 var yelp_request = function(userParameters, callback){
   var httpMethod = 'GET';
   var yelpApiUrl = 'http://api.yelp.com/v2/search';
-  var consumerSecret = yelpkeys.CONSUMER_SECRET;
-  var tokenSecret = yelpkeys.TOKEN_SECRET;
+  var consumerSecret = process.env.YELP_CONSUMER_SECRET;
+  var tokenSecret = process.env.YELP_TOKEN_SECRET;
 
   var required_parameters = {
-    oauth_consumer_key : yelpkeys.CONSUMER_KEY,
-    oauth_token : yelpkeys.TOKEN,
+    oauth_consumer_key : process.env.YELP_CONSUMER_KEY,
+    oauth_token : process.env.YELP_TOKEN,
     oauth_nonce : n(),
     oauth_timestamp : n().toString().substr(0,10),
     oauth_signature_method : 'HMAC-SHA1',

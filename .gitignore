@@ -41,6 +41,9 @@ node_modules
 client/lib
 
 server/config/dinnerDaddy.sqlite
+
+# keys
+.env
 server/config/fbconfig.js
 server/config/yelpkeys.js
 server/config/googleconfig.js
