@@ -2,10 +2,74 @@ button:disabled {
   color: lightgrey;
 }
 
+.navtitle {
+  font-family: 'Montserrat', serif;
+  font-weight: bold;
+  color: white;
+  font-size: 26px;
+  padding: 5px;
+}
+
 .titleinfo {
   text-align: center;
   font-size: 30px;
   padding: 20px 0px 15px 0px;
+}
+
+.signin {
+  background-image: url('https://c2.staticflickr.com/2/1445/24904163684_e7b7c91fa5_k.jpg');
+  background-size: 100% 100%;
+  background-repeat: no-repeat;
+  /* Set rules to fill background */
+  min-height: 100%;
+  min-width: 1024px;
+  
+  /* Set up proportionate scaling */
+  width: 100%;
+  height: auto;
+  
+  /* Set up positioning */
+  position: fixed;
+  top: 0;
+  left: 0;
+}
+
+.header {
+  position: fixed;
+  top: 30%;
+  left: 50%;
+  /* bring your own prefixes */
+  transform: translate(-50%, -50%);
+}
+
+.header h1 {
+  font-family: 'Montserrat', serif;
+  font-weight: bold;
+  font-size: 120px;
+  color: crimson;
+}
+
+.subtitle {
+  position: fixed;
+  top: 40%;
+  left: 50%;
+  /* bring your own prefixes */
+  transform: translate(-50%, -50%);
+}
+
+.subtitle h2 {
+  font-family: 'Montserrat', serif;
+  font-size: 30px;
+  color: crimson;
+  width: 100%;
+}
+
+.loginbtn {
+  position: fixed;
+  top: 60%;
+  left: 50%;
+  /* bring your own prefixes */
+  transform: translate(-50%, -50%);
 }
 
 .welcome {
@@ -168,7 +232,7 @@ hr {
 
 .main-nav {
   height: 35px;
-  background:rgba(0,94,255,0.2);
+  background: crimson;
 }
 
 .app-logo {
@@ -198,8 +262,20 @@ hr {
   position: absolute;
   left: -80px;
   top: 35px;
-  background:rgba(0,94,225,0.3);
+  background: crimson;
 }
+
+.nav-list a {
+  text-decoration: none;
+  color: white;
+}
+
+.nav-list a:hover {
+  text-decoration: none;
+  font-weight: bold;
+  color: white;
+}
+
 
 @media (max-width: 600px) {
   .welcomesession {
@@ -213,3 +289,57 @@ hr {
   padding: 20px 0px 15px 0px;
   }
 }
+
+@media only screen and (max-width: 630px) {
+  .header {
+    position: fixed;
+    top: 40%;
+    left: 50%;
+    /* bring your own prefixes */
+    transform: translate(-50%, -50%);
+  }
+
+  .header h1 {
+    font-family: 'Montserrat', serif;
+    font-weight: bold;
+    font-size: 50px;
+    color: crimson;
+  }
+
+  .subtitle {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    /* bring your own prefixes */
+    transform: translate(-50%, -50%);
+  }
+
+  .subtitle h2 {
+    font-family: 'Montserrat', serif;
+    font-size: 11px;
+    color: crimson;
+    width: 100%;
+  }
+
+  .loginbtn {
+    position: fixed;
+    top: 70%;
+    left: 50%;
+    /* bring your own prefixes */
+    transform: translate(-50%, -50%);
+  }
+
+  .loginbtn img {
+    width: 200px;
+    length: 200px;
+  }
+
+  .navtitle {
+    font-family: 'Montserrat', serif;
+    font-weight: bold;
+    color: white;
+    font-size: 26px;
+    padding: 5px;
+  }
+}
+
