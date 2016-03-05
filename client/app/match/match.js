@@ -12,7 +12,7 @@ angular.module( 'dinnerDaddy.match', ['dinnerDaddy.services'] )
   var loadNextRestaurant = function(){
 
     // Check if user finished voting, else allow user to keep voting
-    if (currRestaurantIndex > 13) {
+    if (currRestaurantIndex > 18) {
       console.log('No more restaurants');
       $location.path('/waiting');
       $timeout(function () {
