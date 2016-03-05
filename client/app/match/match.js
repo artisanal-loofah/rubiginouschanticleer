@@ -1,6 +1,6 @@
 angular.module( 'dinnerDaddy.match', ['dinnerDaddy.services'] )
 
-.controller( 'MatchController', function( $scope, $rootScope, Match, Auth, Session, Socket, Restaurant, $cookies, $window) {
+.controller( 'MatchController', function( $scope, $rootScope, Match, Auth, Session, Socket, Restaurant, $cookies, $window, $location, $timeout) {
   $scope.session = {};
 
   $scope.currRestaurant = $rootScope.restaurants[0];
@@ -10,10 +10,20 @@ angular.module( 'dinnerDaddy.match', ['dinnerDaddy.services'] )
   var currRestaurantIndex = 0;
 
   var loadNextRestaurant = function(){
+
+    // Check if user finished voting, else allow user to keep voting
+    if (currRestaurantIndex > 13) {
+      console.log('No more restaurants');
+      $location.path('/waiting');
+      $timeout(function () {
+        $location.path('/sessions');
+      }, 4000);
+    } else {
       currRestaurantIndex++;
       $scope.currRestaurant = $rootScope.restaurants[currRestaurantIndex];
       var currentImageURL = $scope.currRestaurant.image_url;
       $rootScope.currRestaurantImageHD = currentImageURL.slice(0,currentImageURL.length-6) + 'l.jpg'; 
+    }
   };
 
   // Check if there is a current user on rootScope, if not get new user.
