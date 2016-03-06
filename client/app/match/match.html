@@ -1,28 +1,41 @@
-<!-- This is the page that is shown when we are trying to match with the other people in our session -->
-<!-- We should be shown a movie, and then choose 'yes' or 'no' -->
 <div id="match" class="container">
-  <p class="center"><span class="bold">{{ user.username }}</span>, would you like to eat at this restaurant with your friends today?</p>
-  <div class="movie">
-    <h2 class="center">{{ currRestaurant.name }}</h2>
-    <!-- <h6 class="center"><img src="{{ currRestaurant.rating_img_url }}"></h6> -->
-    <div class="row">
-      <!-- We want to size the poster appropriately so we can
-      see the buttons at the bottom -->
-      <img class="poster col-xs-6" src="{{ currRestaurantImageHD }}">
+  
+  <div class="welcomesession"><span class="bold">{{ user.username }}</span>, would you like to eat at this restaurant with your friends today?</div>
+  
+  <div class="choice">
+
+      <div class="choicename">
+        {{ currRestaurant.name }}
+      </div>
+
+      <div class="choiceinfo">
+      <div class="choicepic">
+        <img class="poster col-xs-6" src="{{ currRestaurantImageHD }}">
+      </div>
       <div class="summary col-xs-6">
         <img src="{{ currRestaurant.rating_img_url }}"> {{currRestaurant.review_count}} reviews
       </div>
+      
       <div class="summary col-xs-6">
         <p>{{ currRestaurant.snippet_text }}</p>
         <a href="{{currRestaurant.url}}">More info</a>
       </div>
+    
     </div>
-    <div class="mobile-buttons">
-      <button class="col-xs-5 pull-left btn-mobile visible-xs visible-sm" ng-click="no()">No Thanks</button>
-      <button class="col-xs-5 pull-right btn-mobile right-mobile visible-xs visible-sm" ng-click="yes()">Yes Please</button>
-    </div>
-    <div class="laptop-buttons">
-      <button class="col-xs-5 btn-laptop hidden-xs hidden-sm" ng-click="no()">No Thanks</button>
-      <button class="col-xs-5 pull-right btn-laptop right-laptop hidden-xs hidden-sm" ng-click="yes()">Yes Please</button>
+
+  </div>
+
+    <p>
+
+    <div class="buttonchoices">
+      <div class="btn-group btn-group-justified" role="group" aria-label="...">
+        <div class="btn-group" role="group">
+          <button type="button" class="btn btn-default" id="no" ng-click="no()">No Thanks</button>
+        </div>
+
+        <div class="btn-group" role="group">
+          <button type="button" class="btn btn-default" id="yes" ng-click="yes()">Yes Please</button>
+        </div>
+      </div>
     </div>
 </div>

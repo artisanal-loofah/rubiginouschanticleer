@@ -73,6 +73,13 @@ button:disabled {
   transform: translate(-50%, -50%);
 }
 
+.choice {
+  margin-left: auto;
+  margin-right: auto;
+  height: 307px;
+  width: 650px;
+}
+
 .welcome {
   text-align: center;
   font-weight: bold;
@@ -82,6 +89,7 @@ button:disabled {
 .welcomesession {
   text-align: center;
   font-size: 20px;
+  padding: 36px 0px 10px 0px;
 }
 
 .friends {
@@ -100,9 +108,11 @@ button:disabled {
   margin: auto;
 }
 
+.btn-block {
+  font-size: 20px;
+}
+
 .friendinfo {
-  max-width: 200px;
-  max-height: 200px;
   text-align: center;
   border-radius: 25px;
 }
@@ -167,6 +177,12 @@ button:disabled {
   font-size: 2em;
 }
 
+.choicename {
+  text-align: center;
+  font-size: 25px;
+  font-weight: bold;
+}
+
 .container {
   width: 100%;
 }
@@ -183,12 +199,26 @@ button:disabled {
 }
 
 .zipcodebar {
-  padding: 15px 0px 20px;
+  padding: 15px 0px 32px;
 }
 
 .session-label {
-  font-size: 17px;
+  font-size: 27px;
   padding: 0px 0px 0px 7px;
+}
+
+.form-control {
+  height: 57px;
+}
+
+.btn-group > .btn-group:first-child:not(:last-child) > .btn:last-child {
+  background-color: #EEE;
+  background-image: linear-gradient(#FCFCFC, #EEE);
+}
+
+.btn-group > .btn-group:last-child:not(:first-child) > .btn:first-child {
+  background-color: #337ab7;
+  color: white;
 }
 
 .laptop-buttons {
@@ -266,6 +296,7 @@ hr {
   background: crimson;
 }
 
+<<<<<<< HEAD
 .nav-list a {
   text-decoration: none;
   color: white;
@@ -277,11 +308,11 @@ hr {
   color: white;
 }
 
-
-@media (max-width: 600px) {
+@media (max-width: 400px) {
   .welcomesession {
     text-align: center;
     font-size: 15px;
+    padding: 0px 0px 10px 0px;
   }
 
   .titleinfo {
@@ -289,6 +320,13 @@ hr {
   font-size: 20px;
   padding: 20px 0px 15px 0px;
   }
+
+  .session-label {
+  font-size: 25px;
+  padding: 0px 0px 0px 7px;
+}
+
+
 }
 
 @media only screen and (max-width: 630px) {
@@ -344,4 +382,3 @@ hr {
     padding: 5px;
   }
 }
-
